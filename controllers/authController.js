@@ -15,16 +15,18 @@ exports.login = asyncHandler(async (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
   const securityToken = req.body.securityToken;
-  await conn.login(username, password + securityToken, (err, user) => {
-    if (err) {
-      return next(new ErrorResponse(`${err}`, 401));
-    }
-    req.session.auth = {
-      accessToken: conn.accessToken,
-      instanceUrl: conn.instanceUrl,
-    };
-    console.log(req.session.auth);
-    res.status(200).json({ success: true, data: user });
+
+  await conn.login(username, password + securityToken);
+
+  req.session.auth = {
+    accessToken: conn.accessToken,
+    instanceUrl: conn.instanceUrl,
+  };
+  const user = await conn.identity();
+  const org = await conn.sobject("Organization").retrieve(user.organization_id);
+  res.status(200).json({
+    success: true,
+    data: { ...user, orgName: org.Name },
   });
 });
 
@@ -44,13 +46,26 @@ exports.getUser = asyncHandler(async (req, res, next) => {
     instanceUrl: req.session.auth.instanceUrl,
     accessToken: req.session.auth.accessToken,
   });
-  await conn.identity(function (err, user) {
-    if (err) {
-      return next(new ErrorResponse(`${err}`));
-    }
-    res.status(200).json({
-      success: true,
-      data: user,
-    });
+  const user = await conn.identity();
+  const org = await conn.sobject("Organization").retrieve(user.organization_id);
+  res.status(200).json({
+    success: true,
+    data: { ...user, orgName: org.Name },
+  });
+});
+
+// @desc get Org info
+// @route GET /api/v1/org
+// @access Private
+exports.getOrg = asyncHandler(async (req, res, next) => {
+  const conn = new jsforce.Connection({
+    instanceUrl: req.session.auth.instanceUrl,
+    accessToken: req.session.auth.accessToken,
+  });
+  const user = await conn.identity();
+  const org = await conn.sobject("Organization").retrieve(user.organization_id);
+  res.status(200).json({
+    success: true,
+    data: org,
   });
 });

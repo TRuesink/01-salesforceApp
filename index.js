@@ -3,6 +3,7 @@ const express = require("express");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 const cookieSession = require("cookie-session");
+const cors = require("cors");
 
 // imported files
 const keys = require("./config/keys");
@@ -29,6 +30,7 @@ app.use(
 );
 app.use(morgan("dev"));
 app.use(bodyParser.json());
+app.use(cors());
 
 // mount routers
 app.use("/api/v1/sobjects", sobjectRoutes);
