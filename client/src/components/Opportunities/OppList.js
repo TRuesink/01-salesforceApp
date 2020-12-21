@@ -1,7 +1,19 @@
 import React from "react";
 import OppItem from "./OppItem";
 
+import { connect } from "react-redux";
+import { changeLoadingStatus } from "../../actions";
+import { LOADING, NOT_LOADING } from "../../actions/types";
+
 class OppList extends React.Component {
+  componentDidMount() {
+    this.props.changeLoadingStatus(LOADING);
+  }
+  componentDidUpdate(prevProps) {
+    if (this.props.opps !== prevProps.opps) {
+      this.props.changeLoadingStatus(NOT_LOADING);
+    }
+  }
   renderContent() {
     return Object.values(this.props.opps).map((opp) => {
       return <OppItem opp={opp} />;
@@ -9,7 +21,12 @@ class OppList extends React.Component {
   }
   render() {
     return (
-      <div className="ui segment">
+      <div
+        className={
+          this.props.loadingStatus ? "ui loading segment" : "ui segment"
+        }
+      >
+        <h1 className="ui header">Opportunities</h1>
         <table className="ui celled table">
           <thead>
             <tr>
@@ -25,4 +42,10 @@ class OppList extends React.Component {
   }
 }
 
-export default OppList;
+const mapStateToProps = (state) => {
+  return {
+    loadingStatus: state.loadingStatus,
+  };
+};
+
+export default connect(mapStateToProps, { changeLoadingStatus })(OppList);

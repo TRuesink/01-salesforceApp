@@ -18,3 +18,5 @@ export const FETCH_CONTACTS = "FETCH_CONTACTS";
 
 //Contact opportunity types
 export const FETCH_OPPORTUNITIES = "FETCH_OPPORTUNITIES";
+
+export const FETCH_METADATA = "FETCH_METADATA";

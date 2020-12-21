@@ -1,8 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Link, NavLink } from "react-router-dom";
 
 class SideBar extends React.Component {
   render() {
+    console.log(this.props);
     const { user } = this.props;
     return (
       <div>
@@ -16,19 +18,33 @@ class SideBar extends React.Component {
             </div>
           </div>
           <div className="content">
-            <a className="center aligned header">{user.data.display_name}</a>
+            <Link to="/" className="center aligned header">
+              {user.data.display_name}
+            </Link>
             <div className="center aligned description">
               <p>{user.data.user_type}</p>
             </div>
           </div>
         </div>
         <div className="ui fluid vertical pointing menu">
-          <a className="active item">Opportunities</a>
-          <a className="item">Leads</a>
-          <a className="item">Accounts</a>
-          <a className="item">Contacts</a>
-          <a className="item">Tasks</a>
-          <a className="item">Funnels</a>
+          <NavLink to="/opportunities" className="item">
+            Opportunities
+          </NavLink>
+          <NavLink to="/leads" className="item">
+            Leads
+          </NavLink>
+          <NavLink to="/accounts" className="item">
+            Accounts
+          </NavLink>
+          <NavLink to="/contacts" className="item">
+            Contacts
+          </NavLink>
+          <NavLink to="/tasks" className="item">
+            Tasks
+          </NavLink>
+          <NavLink to="/funnels" className="item">
+            Funnels
+          </NavLink>
           <div className="item">
             <div className="ui transparent icon input">
               <input type="text" placeholder="Search"></input>

@@ -5,6 +5,7 @@ import {
   FETCH_ACCOUNTS,
   FETCH_CONTACTS,
   FETCH_OPPORTUNITIES,
+  FETCH_METADATA,
 } from "./types";
 //import salesforceService from "../apis/salesforceService";
 import axios from "axios";
@@ -35,7 +36,7 @@ export const getUser = () => {
       dispatch({ type: GET_USER, payload: response.data });
     } catch (error) {
       console.log(error);
-      //dispatch({ type: NO_USER, payload: error.response.data });
+      dispatch({ type: NO_USER, payload: error.response.data });
     }
   };
 };
@@ -45,25 +46,23 @@ export const changeFormStatus = (status) => {
   return { type: status };
 };
 
-export const changeMenu = (status) => {
+// UI actions
+export const changeLoadingStatus = (status) => {
   return { type: status };
 };
 
 // Account Actions
 export const fetchAccounts = (params) => {
-  console.log(params);
   return async (dispatch) => {
     const response = await axios.get(
       `/api/v1/sobjects/Account?limit=10&page=1`
     );
-    console.log(response);
     dispatch({ type: FETCH_ACCOUNTS, payload: response.data });
   };
 };
 
 // Contact Actions
 export const fetchContacts = (params) => {
-  console.log(params);
   return async (dispatch) => {
     const response = await axios.get(
       `/api/v1/sobjects/Contact?limit=10&page=1`
@@ -72,13 +71,20 @@ export const fetchContacts = (params) => {
   };
 };
 
-// Contact Opportunities
+// Opportunity Actions
 export const fetchOpportunities = (params) => {
-  console.log(params);
   return async (dispatch) => {
-    const response = await axios.get(
-      `/api/v1/sobjects/Opportunity?limit=10&page=1`
-    );
+    const response = await axios.get(`/api/v1/sobjects/Opportunity`, {
+      params: params,
+    });
     dispatch({ type: FETCH_OPPORTUNITIES, payload: response.data });
+  };
+};
+
+export const fetchMetadata = (type) => {
+  return async (dispatch) => {
+    const response = await axios.get(`/api/v1/sobjects/metadata/${type}`);
+    console.log(response.data.data);
+    dispatch({ type: FETCH_METADATA, payload: response.data.data });
   };
 };

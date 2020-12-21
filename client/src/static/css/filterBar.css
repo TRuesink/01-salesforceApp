@@ -1,5 +1,5 @@
-.ui.bottom.left.popup.filter-bar-menu {
-  left: 1px;
-  display: block !important;
-  top: 55px;
+.filter-bar-form {
+  display: flex !important;
+  align-items: center;
+  margin-bottom: 0 !important;
 }

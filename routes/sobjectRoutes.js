@@ -7,6 +7,7 @@ const {
   updateSobject,
   deleteSobject,
   createSobject,
+  getMetaData,
 } = require("../controllers/sobjectController");
 
 // bring in authentication middlewares
@@ -14,7 +15,7 @@ const { authorized } = require("../middlewares/auth");
 const advancedResults = require("../middlewares/advancedResults");
 
 const router = express.Router();
-
+router.route("/metadata/:type").get(authorized, getMetaData);
 router
   .route("/:type")
   .get(advancedResults, authorized, getSobjects)

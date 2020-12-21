@@ -1,5 +1,4 @@
 import { GET_USER, NO_USER, SIGN_OUT } from "../actions/types";
-import appReducer from "../reducers";
 
 const userReducer = (state = { success: null }, action) => {
   switch (action.type) {

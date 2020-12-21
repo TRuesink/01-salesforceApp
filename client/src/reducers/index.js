@@ -1,19 +1,18 @@
 import { combineReducers } from "redux";
 import { reducer as formReducer } from "redux-form";
-import formStatusReducer from "./formStatusReducer";
 import userReducer from "./userReducer";
-
+import loadingReducer from "./loadingReducer";
 import { SIGN_OUT } from "../actions/types";
-import filterMenuReducer from "./filterMenuReducer";
 import accountReducer from "./accountReducer";
 import contactReducer from "./contactReducer";
 import opportunityReducer from "./opportunityReducer";
+import metadataReducer from "./metadataReducer";
 
 const appReducer = combineReducers({
   form: formReducer,
-  formStatus: formStatusReducer,
+  loadingStatus: loadingReducer,
   user: userReducer,
-  filterMenuStatus: filterMenuReducer,
+  metadata: metadataReducer,
   accounts: accountReducer,
   contacts: contactReducer,
   opportunities: opportunityReducer,

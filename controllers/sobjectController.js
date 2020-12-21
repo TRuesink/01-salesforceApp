@@ -77,7 +77,7 @@ exports.deleteSobject = asyncHandler(async (req, res, next) => {
 });
 
 // @desc Create single sobject
-// @route GET /api/v1/sobjects/:type
+// @route POST /api/v1/sobjects/:type
 // @access Private
 exports.createSobject = asyncHandler(async (req, res, next) => {
   const conn = new jsforce.Connection({
@@ -88,4 +88,23 @@ exports.createSobject = asyncHandler(async (req, res, next) => {
   const sobject = await conn.sobject(req.params.type).create(req.body);
 
   res.status(200).json({ success: true, data: sobject });
+});
+
+// @desc get meta data for single sobject
+// @route GET /api/v1/sobjects/:type/meta
+// @access Private
+exports.getMetaData = asyncHandler(async (req, res, next) => {
+  const conn = new jsforce.Connection({
+    instanceUrl: req.session.auth.instanceUrl,
+    accessToken: req.session.auth.accessToken,
+  });
+  console.log(req.params.type);
+  //const metaData = req.params.type;
+  const metaData = await conn.sobject(req.params.type).describe();
+
+  res.status(200).json({
+    success: true,
+    count: metaData.fields.length,
+    data: metaData,
+  });
 });

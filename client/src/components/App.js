@@ -1,26 +1,27 @@
 import React from "react";
-import { Router, Route } from "react-router-dom";
+import SideBar from "./SideBar";
+import { Router, Route, Switch, Link, BrowserRouter } from "react-router-dom";
 import { connect } from "react-redux";
-
-// import history object
-import history from "../history";
 
 // Import components
 import LandingPage from "./LandingPage";
 import LeadList from "./Leads/LeadList";
 import DashboardPage from "./dashboard/DashboardPage";
 import Header from "./Header";
-import SideBar from "./SideBar";
+
 import OppPage from "./Opportunities/OppPage";
 
 //Import actions
-import { getUser } from "../actions";
+import { getUser, fetchMetadata } from "../actions";
+import OppDetail from "./Opportunities/OppDetail";
+import OppCreate from "./Opportunities/OppCreate";
+// import history object
+import history from "../history";
 
 class App extends React.Component {
   componentDidMount() {
-    console.log("component mounted");
+    this.props.fetchMetadata("Opportunity");
   }
-
   renderContent() {
     const { user } = this.props;
     if (user.success === null) {
@@ -41,7 +42,7 @@ class App extends React.Component {
       );
     } else if (user.success === true) {
       return (
-        <Router history={history}>
+        <>
           <Header
             orgName={user.data.orgName}
             userName={user.data.display_name}
@@ -52,16 +53,22 @@ class App extends React.Component {
             </div>
             <div className="twelve wide column">
               <Route path="/" exact component={DashboardPage} />
-              <Route path="/Opportunities" exact component={OppPage} />
-              <Route path="/Leads" exact component={LeadList} />
+              <Route path="/opportunities" exact component={OppPage} />
+              <Route path="/opportunities/create" exact component={OppCreate} />
+              <Route path="/opportunities/:id" exact component={OppDetail} />
+              <Route path="/leads" exact component={LeadList} />
             </div>
           </div>
-        </Router>
+        </>
       );
     }
   }
   render() {
-    return <div className="ui container">{this.renderContent()}</div>;
+    return (
+      <div className="ui container">
+        <Router history={history}>{this.renderContent()}</Router>
+      </div>
+    );
   }
 }
 
@@ -71,4 +78,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getUser })(App);
+export default connect(mapStateToProps, { getUser, fetchMetadata })(App);

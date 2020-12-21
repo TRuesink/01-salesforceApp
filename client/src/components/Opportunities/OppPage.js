@@ -7,19 +7,26 @@ import {
   fetchAccounts,
   fetchContacts,
   fetchOpportunities,
+  changeLoadingStatus,
 } from "../../actions";
-import contactReducer from "../../reducers/contactReducer";
+import { LOADING } from "../../actions/types";
 
 class OppPage extends React.Component {
   componentDidMount() {
     this.props.fetchAccounts("test");
-    this.props.fetchContacts("test");
-    this.props.fetchOpportunities("test");
+    this.props.fetchOpportunities({ limit: 10, page: 1 });
   }
+
+  onSelectFilter = (formValues) => {
+    this.props.changeLoadingStatus(LOADING);
+    if (Object.keys(formValues).length === 0) {
+      return this.props.fetchOpportunities({ limit: 10, page: 1 });
+    }
+    this.props.fetchOpportunities(formValues);
+  };
 
   renderContent() {
     const { accounts, contacts } = this.props;
-    console.log(this.props);
     if (accounts === null || contacts === null) {
       return <div>loading...</div>;
     }
@@ -29,8 +36,9 @@ class OppPage extends React.Component {
           accounts={accounts}
           opps={null}
           leads={null}
-          contacts={contacts}
+          contacts={null}
           funnels={null}
+          onSelectFilter={this.onSelectFilter}
         />
         <OppList opps={this.props.opportunities} />
       </div>
@@ -45,7 +53,6 @@ class OppPage extends React.Component {
 const mapStateToProps = (state) => {
   return {
     accounts: state.accounts,
-    contacts: state.contacts,
     opportunities: state.opportunities,
   };
 };
@@ -54,4 +61,5 @@ export default connect(mapStateToProps, {
   fetchAccounts,
   fetchContacts,
   fetchOpportunities,
+  changeLoadingStatus,
 })(OppPage);

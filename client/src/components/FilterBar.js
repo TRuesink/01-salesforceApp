@@ -1,36 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-import { changeMenu } from "../actions";
-import { CLICK } from "../actions/types";
+import { Link } from "react-router-dom";
 import { reduxForm, Field } from "redux-form";
 import { Dropdown } from "semantic-ui-react";
+import history from "../history";
 
 import "../static/css/filterBar.css";
 
-const options = [
-  { key: "placeholder", text: "", value: "" },
-  { key: "angular", text: "Angular", value: "angular" },
-  { key: "css", text: "CSS", value: "css" },
-  { key: "design", text: "Graphic Design", value: "design" },
-  { key: "ember", text: "Ember", value: "ember" },
-  { key: "html", text: "HTML", value: "html" },
-  { key: "ia", text: "Information Architecture", value: "ia" },
-  { key: "javascript", text: "Javascript", value: "javascript" },
-  { key: "mech", text: "Mechanical Engineering", value: "mech" },
-  { key: "meteor", text: "Meteor", value: "meteor" },
-  { key: "node", text: "NodeJS", value: "node" },
-  { key: "plumbing", text: "Plumbing", value: "plumbing" },
-  { key: "python", text: "Python", value: "python" },
-  { key: "rails", text: "Rails", value: "rails" },
-  { key: "react", text: "React", value: "react" },
-  { key: "repair", text: "Kitchen Repair", value: "repair" },
-  { key: "ruby", text: "Ruby", value: "ruby" },
-  { key: "ui", text: "UI Design", value: "ui" },
-  { key: "ux", text: "User Experience", value: "ux" },
-];
-
 class FilterBar extends React.Component {
-  renderInput(props) {
+  renderInput = (props) => {
     return (
       <Dropdown
         onChange={(e, { value }) => props.input.onChange(value)}
@@ -41,25 +19,24 @@ class FilterBar extends React.Component {
         value={props.value}
       />
     );
-  }
+  };
 
   renderContent() {
     const { accounts, contacts, leads, opps, funnels } = this.props;
     const temp = { accounts, contacts, leads, opps, funnels };
     const categories = Object.values({ ...temp });
-    const titles = ["Account", "Contact", "Lead", "Opportunity", "Funnel"];
-    console.log(categories);
+    const titles = ["AccountId", "Contact", "Lead", "Opportunity", "Funnel"];
     for (let i = 0; i < 5; i++) {
       if (categories[i] !== null) {
         categories[i].title = titles[i];
       }
     }
-    console.log(categories);
+
     return categories.map((cat) => {
       if (cat !== null) {
         const title = cat.title;
         return (
-          <div className="item">
+          <div className="field">
             <Field
               name={title}
               component={this.renderInput}
@@ -74,11 +51,42 @@ class FilterBar extends React.Component {
     });
   }
 
+  onSubmit = (formValues) => {
+    this.props.onSelectFilter(formValues);
+  };
+
   render() {
+    console.log(history);
     return (
       <div className="ui menu">
-        <div className="header item">Filter</div>
-        {this.renderContent()}
+        <div className="item">
+          <form
+            className="ui form"
+            onSubmit={this.props.handleSubmit(this.onSubmit)}
+          >
+            <div className="filter-bar-form inline fields">
+              <label>Filter</label>
+              {this.renderContent()}
+              <div className="field">
+                <button
+                  style={{ backgroundColor: "#04A3E3", color: "white" }}
+                  className="ui button primary"
+                >
+                  Filter
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div className="right item">
+          <Link
+            to={`${history.location.pathname}/create`}
+            style={{ backgroundColor: "#04A3E3", color: "white" }}
+            className="ui button primary"
+          >
+            New
+          </Link>
+        </div>
       </div>
     );
   }
@@ -94,4 +102,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { changeMenu })(FilterBar);
+export default connect(mapStateToProps)(FilterBar);

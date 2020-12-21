@@ -2,7 +2,7 @@ import React from "react";
 import { reduxForm, Field } from "redux-form";
 import { connect } from "react-redux";
 
-import { signIn, changeFormStatus } from "../actions";
+import { signIn, changeLoadingStatus } from "../actions";
 import { LOADING, NOT_LOADING } from "../actions/types";
 
 import "../static/css/landingPage.css";
@@ -11,11 +11,11 @@ import salesforceLogo from "../static/images/salesforceLogo.png";
 class LandingPage extends React.Component {
   onSubmit = (formValues) => {
     console.log(formValues);
-    this.props.changeFormStatus(LOADING);
+    this.props.changeLoadingStatus(LOADING);
     this.props.signIn(formValues);
   };
   componentDidMount() {
-    this.props.changeFormStatus(NOT_LOADING);
+    this.props.changeLoadingStatus(NOT_LOADING);
   }
 
   renderInput({ iconName, input, meta }) {
@@ -36,7 +36,9 @@ class LandingPage extends React.Component {
               <div className="landing-column">
                 <form
                   onSubmit={this.props.handleSubmit(this.onSubmit)}
-                  className={`ui ${this.props.formStatus} form`}
+                  className={
+                    this.props.loadingStatus ? `ui form loading` : "ui form"
+                  }
                 >
                   <div className="field">
                     <label>Email</label>
@@ -101,10 +103,10 @@ LandingPage = reduxForm({
 
 const mapStateToProps = (state) => {
   return {
-    formStatus: state.formStatus,
+    loadingStatus: state.loadingStatus,
   };
 };
 
-export default connect(mapStateToProps, { signIn, changeFormStatus })(
+export default connect(mapStateToProps, { signIn, changeLoadingStatus })(
   LandingPage
 );
