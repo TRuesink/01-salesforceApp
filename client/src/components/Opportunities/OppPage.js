@@ -17,6 +17,8 @@ class OppPage extends React.Component {
     this.props.fetchOpportunities({ limit: 10, page: 1 });
   }
 
+  componentDidUpdate(prevProps) {}
+
   onSelectFilter = (formValues) => {
     this.props.changeLoadingStatus(LOADING);
     if (Object.keys(formValues).length === 0) {
@@ -32,15 +34,8 @@ class OppPage extends React.Component {
     }
     return (
       <div>
-        <FilterBar
-          accounts={accounts}
-          opps={null}
-          leads={null}
-          contacts={null}
-          funnels={null}
-          onSelectFilter={this.onSelectFilter}
-        />
-        <OppList opps={this.props.opportunities} />
+        <FilterBar accounts={accounts} onSelectFilter={this.onSelectFilter} />
+        <OppList />
       </div>
     );
   }

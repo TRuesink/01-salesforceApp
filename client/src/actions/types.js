@@ -4,10 +4,7 @@ export const GET_USER = "GET_USER";
 export const NO_USER = "NO_USER";
 export const LOADING = "LOADING";
 export const NOT_LOADING = "NOT_LOADING";
-export const ERROR = "ERROR";
 export const SUCCESS = "SUCCESS";
-export const GET_ORG = "GET_ORG";
-export const NO_ORG = "NO_ORG";
 
 export const CLICK = "CLICK";
 
@@ -18,5 +15,14 @@ export const FETCH_CONTACTS = "FETCH_CONTACTS";
 
 //Contact opportunity types
 export const FETCH_OPPORTUNITIES = "FETCH_OPPORTUNITIES";
+export const CREATE_OPPORTUNITY = "CREATE_OPPORTUNITY";
+export const FETCH_OPPORTUNITY = "FETCH_OPPORTUNITY";
+export const UPDATE_OPPORTUNITY = "UPDATE_OPPORTUNITY";
 
+// metadata types
 export const FETCH_METADATA = "FETCH_METADATA";
+export const FETCH_PATHS = "FETCH_PATHS";
+
+//edit mode types
+export const EDIT = "EDIT";
+export const VIEW = "VIEW";

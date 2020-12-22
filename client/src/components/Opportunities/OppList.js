@@ -10,13 +10,13 @@ class OppList extends React.Component {
     this.props.changeLoadingStatus(LOADING);
   }
   componentDidUpdate(prevProps) {
-    if (this.props.opps !== prevProps.opps) {
+    if (this.props.opportunities !== prevProps.opportunities) {
       this.props.changeLoadingStatus(NOT_LOADING);
     }
   }
   renderContent() {
-    return Object.values(this.props.opps).map((opp) => {
-      return <OppItem opp={opp} />;
+    return Object.values(this.props.opportunities).map((opp) => {
+      return <OppItem key={opp.Id} opp={opp} />;
     });
   }
   render() {
@@ -45,6 +45,7 @@ class OppList extends React.Component {
 const mapStateToProps = (state) => {
   return {
     loadingStatus: state.loadingStatus,
+    opportunities: state.opportunities,
   };
 };
 

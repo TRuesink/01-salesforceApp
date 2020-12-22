@@ -2,6 +2,8 @@ import React from "react";
 import Modal from "../Modal";
 import OppForm from "./OppForm";
 import history from "../../history";
+import { connect } from "react-redux";
+import { createOpportunity } from "../../actions";
 
 class OppCreate extends React.Component {
   renderActions() {
@@ -13,13 +15,16 @@ class OppCreate extends React.Component {
         >
           Cancel
         </button>
-        <button className="ui button primary">Create</button>
       </>
     );
   }
   renderContent() {
-    return <OppForm />;
+    return <OppForm onSubmit={this.onSubmit} />;
   }
+
+  onSubmit = (formValues) => {
+    this.props.createOpportunity(formValues);
+  };
   render() {
     return (
       <div>
@@ -34,4 +39,4 @@ class OppCreate extends React.Component {
   }
 }
 
-export default OppCreate;
+export default connect(null, { createOpportunity })(OppCreate);

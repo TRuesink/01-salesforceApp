@@ -11,6 +11,7 @@ class FilterBar extends React.Component {
   renderInput = (props) => {
     return (
       <Dropdown
+        key={1}
         onChange={(e, { value }) => props.input.onChange(value)}
         clearable
         placeholder={props.placeholder}
@@ -23,32 +24,43 @@ class FilterBar extends React.Component {
 
   renderContent() {
     const { accounts, contacts, leads, opps, funnels } = this.props;
+    console.log(contacts);
     const temp = { accounts, contacts, leads, opps, funnels };
     const categories = Object.values({ ...temp });
+    const testForRender = categories
+      .filter((item) => item !== undefined)
+      .every((item) => Object.keys(item).length !== 0);
     const titles = ["AccountId", "Contact", "Lead", "Opportunity", "Funnel"];
     for (let i = 0; i < 5; i++) {
-      if (categories[i] !== null) {
+      if (categories[i] !== undefined) {
         categories[i].title = titles[i];
       }
     }
+    console.log(testForRender);
+    if (testForRender) {
+      return categories.map((cat) => {
+        if (cat !== undefined) {
+          const title = cat.title;
 
-    return categories.map((cat) => {
-      if (cat !== null) {
-        const title = cat.title;
-        return (
-          <div className="field">
-            <Field
-              name={title}
-              component={this.renderInput}
-              placeholder={title}
-              options={Object.values(cat).map((item) => {
-                return { key: item.Id, text: item.Name, value: item.Id };
-              })}
-            />
-          </div>
-        );
-      }
-    });
+          const options = Object.values(cat)
+            .filter((item) => typeof item === "object")
+            .map((item) => {
+              return { key: item.Id, text: item.Name, value: item.Id };
+            });
+          return (
+            <div key={cat.title} className="field">
+              <Field
+                name={title}
+                component={this.renderInput}
+                placeholder={title}
+                options={options}
+              />
+            </div>
+          );
+        }
+      });
+    }
+    return <div key={1} className="field loading segment"></div>;
   }
 
   onSubmit = (formValues) => {
@@ -56,7 +68,6 @@ class FilterBar extends React.Component {
   };
 
   render() {
-    console.log(history);
     return (
       <div className="ui menu">
         <div className="item">

@@ -12,6 +12,9 @@ const errorHandler = require("./middlewares/error");
 // Routes
 const sobjectRoutes = require("./routes/sobjectRoutes");
 const authRoutes = require("./routes/authRoutes");
+const chatterRoutes = require("./routes/chatterRoutes");
+const metadataRoutes = require("./routes/metadataRoutes");
+
 const bodyParser = require("body-parser");
 
 // env vars
@@ -35,6 +38,8 @@ app.use(cors());
 // mount routers
 app.use("/api/v1/sobjects", sobjectRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/chatter", chatterRoutes);
+app.use("/api/v1/metadata", metadataRoutes);
 
 // custom error handling middleware
 app.use(errorHandler);

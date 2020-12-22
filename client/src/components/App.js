@@ -52,11 +52,17 @@ class App extends React.Component {
               <SideBar />
             </div>
             <div className="twelve wide column">
-              <Route path="/" exact component={DashboardPage} />
-              <Route path="/opportunities" exact component={OppPage} />
-              <Route path="/opportunities/create" exact component={OppCreate} />
-              <Route path="/opportunities/:id" exact component={OppDetail} />
-              <Route path="/leads" exact component={LeadList} />
+              <Switch>
+                <Route path="/" exact component={DashboardPage} />
+                <Route path="/opportunities" exact component={OppPage} />
+                <Route
+                  path="/opportunities/create"
+                  exact
+                  component={OppCreate}
+                />
+                <Route path="/opportunities/:id" exact component={OppDetail} />
+                <Route path="/leads" exact component={LeadList} />
+              </Switch>
             </div>
           </div>
         </>

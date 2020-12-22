@@ -59,7 +59,11 @@ exports.updateSobject = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse(`${sobject.errors}`));
   }
 
-  res.status(200).json({ success: true, data: sobject });
+  const updatedSobject = await conn
+    .sobject(req.params.type)
+    .retrieve(req.params.id);
+
+  res.status(200).json({ success: true, data: updatedSobject });
 });
 
 // @desc Delete single sobject
@@ -98,8 +102,6 @@ exports.getMetaData = asyncHandler(async (req, res, next) => {
     instanceUrl: req.session.auth.instanceUrl,
     accessToken: req.session.auth.accessToken,
   });
-  console.log(req.params.type);
-  //const metaData = req.params.type;
   const metaData = await conn.sobject(req.params.type).describe();
 
   res.status(200).json({

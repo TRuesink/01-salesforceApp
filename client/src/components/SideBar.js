@@ -4,7 +4,6 @@ import { Link, NavLink } from "react-router-dom";
 
 class SideBar extends React.Component {
   render() {
-    console.log(this.props);
     const { user } = this.props;
     return (
       <div>

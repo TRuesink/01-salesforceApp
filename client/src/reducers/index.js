@@ -7,6 +7,7 @@ import accountReducer from "./accountReducer";
 import contactReducer from "./contactReducer";
 import opportunityReducer from "./opportunityReducer";
 import metadataReducer from "./metadataReducer";
+import editModeReducer from "./editModeReducer";
 
 const appReducer = combineReducers({
   form: formReducer,
@@ -16,6 +17,7 @@ const appReducer = combineReducers({
   accounts: accountReducer,
   contacts: contactReducer,
   opportunities: opportunityReducer,
+  editing: editModeReducer,
 });
 
 const rootReducer = (state, action) => {

@@ -6,9 +6,14 @@ import {
   FETCH_CONTACTS,
   FETCH_OPPORTUNITIES,
   FETCH_METADATA,
+  CREATE_OPPORTUNITY,
+  FETCH_PATHS,
+  UPDATE_OPPORTUNITY,
+  VIEW,
 } from "./types";
 //import salesforceService from "../apis/salesforceService";
 import axios from "axios";
+import history from "../history";
 
 // auth actions
 export const signIn = (formValues) => {
@@ -51,11 +56,15 @@ export const changeLoadingStatus = (status) => {
   return { type: status };
 };
 
+export const changeEditMode = (status) => {
+  return { type: status };
+};
+
 // Account Actions
 export const fetchAccounts = (params) => {
   return async (dispatch) => {
     const response = await axios.get(
-      `/api/v1/sobjects/Account?limit=10&page=1`
+      `/api/v1/sobjects/Account?limit=50&page=1`
     );
     dispatch({ type: FETCH_ACCOUNTS, payload: response.data });
   };
@@ -72,6 +81,7 @@ export const fetchContacts = (params) => {
 };
 
 // Opportunity Actions
+// get opportunities
 export const fetchOpportunities = (params) => {
   return async (dispatch) => {
     const response = await axios.get(`/api/v1/sobjects/Opportunity`, {
@@ -81,10 +91,41 @@ export const fetchOpportunities = (params) => {
   };
 };
 
+// create an opportunity
+export const createOpportunity = (formValues) => {
+  return async (dispatch) => {
+    const response = await axios.post(
+      `/api/v1/sobjects/Opportunity`,
+      formValues
+    );
+    dispatch({ type: CREATE_OPPORTUNITY, payload: response.data });
+    history.push("/opportunities");
+  };
+};
+
+// update an opportunity
+export const updateOpportunity = (id, formValues) => {
+  return async (dispatch) => {
+    const response = await axios.put(
+      `/api/v1/sobjects/Opportunity/${id}`,
+      formValues
+    );
+    dispatch({ type: UPDATE_OPPORTUNITY, payload: response.data });
+    dispatch({ type: VIEW });
+  };
+};
+
+// metadata actions
 export const fetchMetadata = (type) => {
   return async (dispatch) => {
     const response = await axios.get(`/api/v1/sobjects/metadata/${type}`);
-    console.log(response.data.data);
     dispatch({ type: FETCH_METADATA, payload: response.data.data });
+  };
+};
+
+export const fetchPaths = () => {
+  return async (dispatch) => {
+    const response = await axios.get(`/api/v1/metadata/PathAssistant`);
+    dispatch({ type: FETCH_PATHS, payload: response.data.data });
   };
 };
