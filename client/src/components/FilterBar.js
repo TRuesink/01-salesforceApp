@@ -24,7 +24,6 @@ class FilterBar extends React.Component {
 
   renderContent() {
     const { accounts, contacts, leads, opps, funnels } = this.props;
-    console.log(contacts);
     const temp = { accounts, contacts, leads, opps, funnels };
     const categories = Object.values({ ...temp });
     const testForRender = categories
@@ -36,9 +35,8 @@ class FilterBar extends React.Component {
         categories[i].title = titles[i];
       }
     }
-    console.log(testForRender);
     if (testForRender) {
-      return categories.map((cat) => {
+      return categories.map((cat, index) => {
         if (cat !== undefined) {
           const title = cat.title;
 
@@ -58,6 +56,7 @@ class FilterBar extends React.Component {
             </div>
           );
         }
+        return <div key={"undefinedCat" + index}></div>;
       });
     }
     return <div key={1} className="field loading segment"></div>;

@@ -19,12 +19,6 @@ class OppDetail extends React.Component {
     this.props.changeEditMode(VIEW);
     this.props.changeLoadingStatus(NOT_LOADING);
   }
-  componentDidUpdate(prevProps) {
-    if (this.props.opportunity === prevProps.opportunity) {
-      console.log("same");
-    }
-    console.log("different");
-  }
 
   getStages() {
     const { metadata } = this.props;
@@ -77,17 +71,15 @@ class OppDetail extends React.Component {
   }
 
   onSubmit = (formValues) => {
-    console.log(formValues);
     this.props.updateOpportunity(this.props.match.params.id, formValues);
   };
 
   render() {
     const { opportunity } = this.props;
-    console.log(opportunity);
     return (
       <div>
         {!opportunity ? (
-          <div style={{ height: "400px" }} className="ui segment">
+          <div style={{ height: "400px" }} className="ui basic segment">
             <div className="ui active inverted dimmer">
               <div className="ui text loader">Loading</div>
             </div>
@@ -136,7 +128,7 @@ class OppDetail extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    opportunity: state.opportunities[ownProps.match.params.id],
+    opportunity: state.opportunities.data[ownProps.match.params.id],
     metadata: state.metadata,
     editing: state.editing,
   };

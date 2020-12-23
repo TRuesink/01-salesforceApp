@@ -10,7 +10,6 @@ import salesforceLogo from "../static/images/salesforceLogo.png";
 
 class LandingPage extends React.Component {
   onSubmit = (formValues) => {
-    console.log(formValues);
     this.props.changeLoadingStatus(LOADING);
     this.props.signIn(formValues);
   };
@@ -81,7 +80,11 @@ class LandingPage extends React.Component {
                   sales process
                 </p>
                 <div style={{ fontStyle: "italic" }}>Powered By</div>
-                <img className="ui image" src={salesforceLogo}></img>
+                <img
+                  className="ui image"
+                  src={salesforceLogo}
+                  alt="sfLogo"
+                ></img>
                 <a
                   style={{ marginTop: "30px" }}
                   href="https://developer.salesforce.com/signup"

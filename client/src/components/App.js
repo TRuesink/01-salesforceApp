@@ -1,6 +1,6 @@
 import React from "react";
 import SideBar from "./SideBar";
-import { Router, Route, Switch, Link, BrowserRouter } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 
 // Import components

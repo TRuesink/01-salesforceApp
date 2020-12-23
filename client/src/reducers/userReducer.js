@@ -1,4 +1,4 @@
-import { GET_USER, NO_USER, SIGN_OUT } from "../actions/types";
+import { GET_USER, NO_USER } from "../actions/types";
 
 const userReducer = (state = { success: null }, action) => {
   switch (action.type) {

@@ -1,12 +1,13 @@
 import React from "react";
 import converter from "number-to-words";
 import { connect } from "react-redux";
-import { fetchPaths } from "../actions";
-import _ from "lodash";
+import { fetchPaths, changeLoadingStatus } from "../actions";
+import { LOADING, NOT_LOADING } from "../actions/types";
 
 class Path extends React.Component {
   componentDidMount() {
     this.props.fetchPaths();
+    this.props.changeLoadingStatus(NOT_LOADING);
   }
   renderStepAssist() {
     const { metadata } = this.props;
@@ -20,19 +21,35 @@ class Path extends React.Component {
       (item) => item.picklistValueName === this.props.currentStage
     );
     if (assist.length === 0) {
-      return <div></div>;
+      return <div>Add Instructions to Path Assist in your Salesforce Org</div>;
     }
     return <div dangerouslySetInnerHTML={{ __html: assist[0].info }}></div>;
   }
+
+  onClickStage = (stage) => {
+    this.props.onSubmit({ StageName: stage });
+    this.props.changeLoadingStatus(LOADING);
+  };
+
   renderSteps() {
     const { stages, currentStage } = this.props;
-    return stages.map((stage) => {
+    let activeIndex = 100;
+    return stages.map((stage, index) => {
+      if (stage.value === currentStage) {
+        activeIndex = index;
+      }
       return (
         <a
-          onClick={() => this.props.onSubmit({ StageName: stage.value })}
+          onClick={() => this.onClickStage(stage.value)}
           href="#"
           key={stage.value}
-          className={currentStage === stage.value ? "active step" : "step"}
+          className={
+            index < activeIndex
+              ? "completed step"
+              : index > activeIndex
+              ? "step"
+              : "active step"
+          }
         >
           <div className="content">
             <div className="title">{stage.value}</div>
@@ -43,20 +60,32 @@ class Path extends React.Component {
     });
   }
   renderContent() {
-    const { stages, currentStage } = this.props;
+    const { stages } = this.props;
     return (
       <div className="ui two column grid">
         <div className="six wide column">
           <div
-            className={`ui ${converter.toWords(
-              stages.length
-            )} fluid mini vertical steps`}
+            className={
+              this.props.loadingStatus
+                ? "ui loading basic segment"
+                : "ui basic segment"
+            }
           >
-            {this.renderSteps()}
+            <div
+              className={`ui ${converter.toWords(
+                stages.length
+              )} fluid mini vertical ordered steps`}
+            >
+              {this.renderSteps()}
+            </div>
           </div>
         </div>
         <div className="ten wide column">
-          <div className="ui segment">{this.renderStepAssist()}</div>
+          <div style={{ height: "100%" }} className="ui segment">
+            <h3>Directions</h3>
+            <div className="ui clearing divider"></div>
+            {this.renderStepAssist()}
+          </div>
         </div>
       </div>
     );
@@ -70,7 +99,10 @@ class Path extends React.Component {
 const mapStateToProps = (state) => {
   return {
     metadata: state.metadata,
+    loadingStatus: state.loadingStatus,
   };
 };
 
-export default connect(mapStateToProps, { fetchPaths })(Path);
+export default connect(mapStateToProps, { fetchPaths, changeLoadingStatus })(
+  Path
+);

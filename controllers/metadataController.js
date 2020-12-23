@@ -13,6 +13,14 @@ exports.getMetadata = asyncHandler(async (req, res, next) => {
 
   const types = [{ type: req.params.resource, folder: null }];
   const metadataList = await conn.metadata.list(types, "39.0");
+  // const allMetadata = await conn.metadata.describe("39.0");
+  // for (var i = 0; i < allMetadata.length; i++) {
+  //   var meta = metadata[i];
+  //   console.log("organizationNamespace: " + meta.organizationNamespace);
+  //   console.log("partialSaveAllowed: " + meta.partialSaveAllowed);
+  //   console.log("testRequired: " + meta.testRequired);
+  //   console.log("metadataObjects count: " + metadataObjects.length);
+  // }
 
   if (!metadataList) {
     return res.status(200).json({

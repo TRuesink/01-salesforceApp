@@ -13,6 +13,7 @@ class SideBar extends React.Component {
               <img
                 className="ui small rounded image"
                 src={user.data.photos.picture}
+                alt="profPic"
               ></img>
             </div>
           </div>
@@ -38,11 +39,8 @@ class SideBar extends React.Component {
           <NavLink to="/contacts" className="item">
             Contacts
           </NavLink>
-          <NavLink to="/tasks" className="item">
-            Tasks
-          </NavLink>
-          <NavLink to="/funnels" className="item">
-            Funnels
+          <NavLink to="/chatter" className="item">
+            Chatter
           </NavLink>
           <div className="item">
             <div className="ui transparent icon input">

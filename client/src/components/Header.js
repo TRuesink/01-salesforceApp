@@ -12,7 +12,7 @@ class Header extends React.Component {
       <div className="ui segment">
         <div className="ui secondary stackable menu">
           <div className="item">
-            <img src={salesforceLogo}></img>
+            <img src={salesforceLogo} alt="sfLogo"></img>
             <div style={{ marginLeft: "20px" }}>{this.props.orgName}</div>
           </div>
           <div className="right menu">

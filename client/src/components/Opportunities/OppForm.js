@@ -2,7 +2,6 @@ import React from "react";
 import { Field, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 import _ from "lodash";
-import { Dropdown } from "semantic-ui-react";
 import {
   changeLoadingStatus,
   fetchAccounts,

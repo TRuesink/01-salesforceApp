@@ -10,6 +10,7 @@ import {
   FETCH_PATHS,
   UPDATE_OPPORTUNITY,
   VIEW,
+  NOT_LOADING,
 } from "./types";
 //import salesforceService from "../apis/salesforceService";
 import axios from "axios";
@@ -29,7 +30,7 @@ export const signIn = (formValues) => {
 
 export const signOut = () => {
   return async (dispatch) => {
-    const response = await axios.get("/api/v1/auth/logout");
+    await axios.get("/api/v1/auth/logout");
     dispatch({ type: SIGN_OUT });
   };
 };
@@ -88,6 +89,7 @@ export const fetchOpportunities = (params) => {
       params: params,
     });
     dispatch({ type: FETCH_OPPORTUNITIES, payload: response.data });
+    dispatch({ type: NOT_LOADING });
   };
 };
 
@@ -112,6 +114,7 @@ export const updateOpportunity = (id, formValues) => {
     );
     dispatch({ type: UPDATE_OPPORTUNITY, payload: response.data });
     dispatch({ type: VIEW });
+    dispatch({ type: NOT_LOADING });
   };
 };
 

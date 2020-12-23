@@ -48,7 +48,7 @@ class OppPage extends React.Component {
 const mapStateToProps = (state) => {
   return {
     accounts: state.accounts,
-    opportunities: state.opportunities,
+    opportunities: state.opportunities.data,
   };
 };
 

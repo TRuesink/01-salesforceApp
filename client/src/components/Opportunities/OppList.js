@@ -2,8 +2,9 @@ import React from "react";
 import OppItem from "./OppItem";
 
 import { connect } from "react-redux";
-import { changeLoadingStatus } from "../../actions";
+import { changeLoadingStatus, fetchOpportunities } from "../../actions";
 import { LOADING, NOT_LOADING } from "../../actions/types";
+import Pagination from "../Pagination";
 
 class OppList extends React.Component {
   componentDidMount() {
@@ -19,6 +20,12 @@ class OppList extends React.Component {
       return <OppItem key={opp.Id} opp={opp} />;
     });
   }
+
+  onPageTurn = (pageObj) => {
+    this.props.fetchOpportunities(pageObj);
+    this.props.changeLoadingStatus(LOADING);
+  };
+
   render() {
     return (
       <div
@@ -37,6 +44,10 @@ class OppList extends React.Component {
           </thead>
           <tbody>{this.renderContent()}</tbody>
         </table>
+        <Pagination
+          onPageTurn={this.onPageTurn}
+          pagination={this.props.pagination}
+        />
       </div>
     );
   }
@@ -45,8 +56,12 @@ class OppList extends React.Component {
 const mapStateToProps = (state) => {
   return {
     loadingStatus: state.loadingStatus,
-    opportunities: state.opportunities,
+    opportunities: state.opportunities.data,
+    pagination: state.opportunities.pagination,
   };
 };
 
-export default connect(mapStateToProps, { changeLoadingStatus })(OppList);
+export default connect(mapStateToProps, {
+  changeLoadingStatus,
+  fetchOpportunities,
+})(OppList);

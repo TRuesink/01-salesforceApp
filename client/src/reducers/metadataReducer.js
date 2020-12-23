@@ -1,4 +1,4 @@
-import _ from "lodash";
+//import _ from "lodash";
 import { FETCH_METADATA, FETCH_PATHS } from "../actions/types";
 
 const metadataReducer = (state = {}, action) => {

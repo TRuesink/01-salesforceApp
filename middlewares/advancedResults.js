@@ -16,8 +16,6 @@ const advancedResults = asyncHandler(async (req, res, next) => {
   //remove identified fields from parms obejct on request
   removeFields.forEach((param) => delete query[param]);
 
-  console.log(query);
-
   // Select Fields
   let fields;
   if (req.query.select) {
@@ -36,10 +34,13 @@ const advancedResults = asyncHandler(async (req, res, next) => {
   //pagination
   const page = parseInt(req.query.page, 10) || 1;
   const limit = parseInt(req.query.limit, 10) || 15;
-  const skip = (page - 1) * limit;
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
 
+  const skip = (page - 1) * limit; // 10
+  const startIndex = (page - 1) * limit; // 10
+  const endIndex = page * limit; // 20
+  console.log("page: ", page);
+  console.log("limit: ", limit);
+  console.log("skip: ", skip);
   // get toal number of objects in database
   const total = await conn.sobject(sobject).count(query);
 
@@ -62,8 +63,9 @@ const advancedResults = asyncHandler(async (req, res, next) => {
   const results = await conn
     .sobject(sobject)
     .find(query, fields)
-    .limit(limit)
-    .offset(skip);
+    .sort("Name")
+    .offset(skip)
+    .limit(limit);
 
   res.advancedResults = {
     success: true,
