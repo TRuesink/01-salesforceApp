@@ -11,6 +11,8 @@ import {
   UPDATE_OPPORTUNITY,
   VIEW,
   NOT_LOADING,
+  FETCH_TASKS,
+  UPDATE_TASK,
 } from "./types";
 //import salesforceService from "../apis/salesforceService";
 import axios from "axios";
@@ -71,7 +73,7 @@ export const fetchAccounts = (params) => {
   };
 };
 
-// Contact Actions
+// CONTACT ACTIONS
 export const fetchContacts = (params) => {
   return async (dispatch) => {
     const response = await axios.get(
@@ -81,7 +83,7 @@ export const fetchContacts = (params) => {
   };
 };
 
-// Opportunity Actions
+// OPPORTUNITY ACTIONS
 // get opportunities
 export const fetchOpportunities = (params) => {
   return async (dispatch) => {
@@ -114,6 +116,27 @@ export const updateOpportunity = (id, formValues) => {
     );
     dispatch({ type: UPDATE_OPPORTUNITY, payload: response.data });
     dispatch({ type: VIEW });
+    dispatch({ type: NOT_LOADING });
+  };
+};
+
+// TASK ACTIONS
+// fetch tasks
+export const fetchTasks = (params) => {
+  return async (dispatch) => {
+    const response = await axios.get(`/api/v1/sobjects/Task`, {
+      params: params,
+    });
+    dispatch({ type: FETCH_TASKS, payload: response.data });
+    dispatch({ type: NOT_LOADING });
+  };
+};
+// update task
+export const updateTask = (id, formValues) => {
+  return async (dispatch) => {
+    const response = await axios.put(`/api/v1/sobjects/Task/${id}`, formValues);
+    dispatch({ type: UPDATE_TASK, payload: response.data });
+    console.log(response);
     dispatch({ type: NOT_LOADING });
   };
 };

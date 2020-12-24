@@ -63,7 +63,7 @@ const advancedResults = asyncHandler(async (req, res, next) => {
   const results = await conn
     .sobject(sobject)
     .find(query, fields)
-    .sort("Name")
+    //.sort("")
     .offset(skip)
     .limit(limit);
 

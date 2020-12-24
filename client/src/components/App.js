@@ -17,6 +17,7 @@ import OppDetail from "./Opportunities/OppDetail";
 import OppCreate from "./Opportunities/OppCreate";
 // import history object
 import history from "../history";
+import OppDetailPage from "./Opportunities/OppDetailPage";
 
 class App extends React.Component {
   componentDidMount() {
@@ -60,7 +61,7 @@ class App extends React.Component {
                   exact
                   component={OppCreate}
                 />
-                <Route path="/opportunities/:id" exact component={OppDetail} />
+                <Route path="/opportunities/:id" component={OppDetailPage} />
                 <Route path="/leads" exact component={LeadList} />
               </Switch>
             </div>

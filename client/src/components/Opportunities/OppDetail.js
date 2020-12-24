@@ -14,20 +14,7 @@ import OppForm from "./OppForm";
 
 class OppDetail extends React.Component {
   componentDidMount() {
-    this.props.fetchMetadata("Opportunity");
-    this.props.fetchOpportunities({ Id: this.props.match.params.id });
     this.props.changeEditMode(VIEW);
-    this.props.changeLoadingStatus(NOT_LOADING);
-  }
-
-  getStages() {
-    const { metadata } = this.props;
-    if (!metadata.Opportunity) {
-      return [];
-    }
-    const fields = metadata.Opportunity.fields;
-    const picklistFields = fields.filter((field) => field.name === "StageName");
-    return _.mapKeys(picklistFields, "name").StageName.picklistValues;
   }
 
   renderList() {
@@ -71,73 +58,43 @@ class OppDetail extends React.Component {
   }
 
   onSubmit = (formValues) => {
-    this.props.updateOpportunity(this.props.match.params.id, formValues);
+    this.props.updateOpportunity(this.props.opportunity.Id, formValues);
   };
 
   render() {
-    const { opportunity } = this.props;
     return (
       <div>
-        {!opportunity ? (
-          <div style={{ height: "400px" }} className="ui basic segment">
-            <div className="ui active inverted dimmer">
-              <div className="ui text loader">Loading</div>
-            </div>
-            <p></p>
-          </div>
+        {this.props.editing ? (
+          <OppForm
+            onSubmit={this.onSubmit}
+            initialValues={_.pick(
+              this.props.opportunity,
+              "Name",
+              "Description",
+              "StageName",
+              "Amount",
+              "Probability",
+              "CloseDate",
+              "Type",
+              "LeadSource",
+              "AccountId"
+            )}
+          />
         ) : (
-          <div>
-            <h1>{opportunity.Name}</h1>
-            <div className="ui clearing divider"></div>
-            <Path
-              onSubmit={this.onSubmit}
-              stages={this.getStages()}
-              currentStage={opportunity.StageName}
-              pathType="Opportunity"
-            />
-            <div className="ui segment">
-              <h3>Details</h3>
-              {this.props.editing ? (
-                <OppForm
-                  onSubmit={this.onSubmit}
-                  initialValues={_.pick(
-                    this.props.opportunity,
-                    "Name",
-                    "Description",
-                    "StageName",
-                    "Amount",
-                    "Probability",
-                    "CloseDate",
-                    "Type",
-                    "LeadSource",
-                    "AccountId"
-                  )}
-                />
-              ) : (
-                <div className="ui relaxed divided list">
-                  {this.renderList()}
-                </div>
-              )}
-            </div>
-          </div>
+          <div className="ui relaxed divided list">{this.renderList()}</div>
         )}
       </div>
     );
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
-    opportunity: state.opportunities.data[ownProps.match.params.id],
-    metadata: state.metadata,
     editing: state.editing,
   };
 };
 
 export default connect(mapStateToProps, {
-  fetchMetadata,
-  fetchOpportunities,
   changeEditMode,
   updateOpportunity,
-  changeLoadingStatus,
 })(OppDetail);

@@ -26,3 +26,7 @@ export const FETCH_PATHS = "FETCH_PATHS";
 //edit mode types
 export const EDIT = "EDIT";
 export const VIEW = "VIEW";
+
+// task types
+export const FETCH_TASKS = "FETCH_TASKS";
+export const UPDATE_TASK = "UPDATE_TASK";

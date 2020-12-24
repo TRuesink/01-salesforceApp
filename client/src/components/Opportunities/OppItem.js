@@ -7,7 +7,7 @@ class OppItem extends React.Component {
     return (
       <tr>
         <td data-label="Name">
-          <Link to={`/opportunities/${opp.Id}`}>{opp.Name}</Link>
+          <Link to={`/opportunities/${opp.Id}/details`}>{opp.Name}</Link>
         </td>
         <td data-label="Age">{opp.CloseDate}</td>
         <td data-label="Job">{opp.StageName}</td>
