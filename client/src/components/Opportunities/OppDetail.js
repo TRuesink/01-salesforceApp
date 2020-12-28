@@ -1,15 +1,8 @@
 import React from "react";
-import Path from "../Path";
 import { connect } from "react-redux";
-import {
-  fetchMetadata,
-  fetchOpportunities,
-  changeEditMode,
-  updateOpportunity,
-  changeLoadingStatus,
-} from "../../actions";
+import { changeEditMode, updateOpportunity } from "../../actions";
 import _ from "lodash";
-import { EDIT, NOT_LOADING, VIEW } from "../../actions/types";
+import { EDIT, VIEW } from "../../actions/types";
 import OppForm from "./OppForm";
 
 class OppDetail extends React.Component {
@@ -81,7 +74,16 @@ class OppDetail extends React.Component {
             )}
           />
         ) : (
-          <div className="ui relaxed divided list">{this.renderList()}</div>
+          <div>
+            <div
+              className={
+                this.props.isFetching ? "ui active inverted dimmer" : ""
+              }
+            >
+              <div className="ui text loader">Loading</div>
+            </div>
+            <div className="ui relaxed divided list">{this.renderList()}</div>
+          </div>
         )}
       </div>
     );

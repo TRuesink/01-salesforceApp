@@ -1,12 +1,37 @@
-import { FETCH_TASKS, UPDATE_TASK } from "../actions/types";
+import {
+  FETCH_TASKS,
+  IN_PROGRESS_TASK,
+  UPDATE_TASK,
+  CREATE_TASK,
+} from "../actions/types";
 import _ from "lodash";
 
-const taskReducer = (state = {}, action) => {
+const taskReducer = (
+  state = { pagination: {}, data: {}, isFetching: false },
+  action
+) => {
   switch (action.type) {
     case FETCH_TASKS:
-      return _.mapKeys(action.payload.data, "Id");
+      console.log(action.payload);
+      return {
+        pagination: action.payload.pagination,
+        data: _.mapKeys(action.payload.data, "Id"),
+        isFetching: false,
+      };
     case UPDATE_TASK:
-      return { ...state, [action.payload.data.Id]: action.payload.data };
+      return {
+        ...state,
+        data: { ...state.data, [action.payload.data.Id]: action.payload.data },
+        isFetching: false,
+      };
+    case CREATE_TASK:
+      return {
+        ...state,
+        data: { ...state.data, [action.payload.data.Id]: action.payload.data },
+        isFetching: false,
+      };
+    case IN_PROGRESS_TASK:
+      return { ...state, isFetching: true };
     default:
       return state;
   }

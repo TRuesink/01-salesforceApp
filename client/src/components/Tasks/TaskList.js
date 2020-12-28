@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { fetchTasks, updateTask } from "../../actions";
 import TaskItem from "./TaskItem";
 import { reduxForm, Field } from "redux-form";
+import { Link } from "react-router-dom";
 
 class TaskList extends React.Component {
   renderCheckBox({ input, task }) {
@@ -23,7 +24,8 @@ class TaskList extends React.Component {
   }
 
   renderTaskList() {
-    return this.props.tasks.map((task) => {
+    const tasks = this.props.tasks.data;
+    return Object.values(tasks).map((task) => {
       return (
         <Field
           onChange={() => this.onTaskCheck(task.Id, task.IsClosed)}
@@ -36,13 +38,31 @@ class TaskList extends React.Component {
     });
   }
   render() {
-    if (this.props.tasks.length === 0) {
+    if (Object.values(this.props.tasks.data) === 0) {
       return <div>No Tasks</div>;
     }
     return (
-      <form className="ui middle aligned divided list">
-        {this.renderTaskList()}
-      </form>
+      <div>
+        <div
+          className={
+            this.props.tasks.isFetching ? "ui active inverted dimmer" : ""
+          }
+        >
+          <div className="ui text loader">Loading</div>
+        </div>
+        <form className="ui middle aligned divided list">
+          {this.renderTaskList()}
+        </form>
+        <div style={{ height: "40px" }}>
+          <Link
+            to={`/tasks/create/${this.props.id}`}
+            style={{ backgroundColor: "#04A3E3", color: "white" }}
+            className="ui right floated circular icon button"
+          >
+            <i className="icon add"></i>
+          </Link>
+        </div>
+      </div>
     );
   }
 }
@@ -53,7 +73,7 @@ TaskList = reduxForm({
 
 const mapStateToProps = (state) => {
   return {
-    tasks: Object.values(state.tasks),
+    tasks: state.tasks,
     enableReinitialize: true,
   };
 };

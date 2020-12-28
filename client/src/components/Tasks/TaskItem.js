@@ -5,10 +5,8 @@ class TaskItem extends React.Component {
     const days = parseInt(
       (new Date(date) - Date.now()) / (1000 * 60 * 60 * 24)
     );
-    if (days < 0) {
-      return `${-1 * days} days overdue`;
-    }
-    return `Due in ${days} days`;
+
+    return days;
   }
 
   render() {
@@ -16,7 +14,17 @@ class TaskItem extends React.Component {
     return (
       <div className="item">
         <div className="right floated content">
-          <div>{this.processDate(date)}</div>
+          {input.value === true ? (
+            <div style={{ color: "green" }}>Task completed</div>
+          ) : this.processDate(date) < 0 ? (
+            <div style={{ color: "red" }}>{`${
+              -1 * this.processDate(date)
+            } days overdue`}</div>
+          ) : (
+            <div style={{ color: "orange" }}>{`Due in ${this.processDate(
+              date
+            )} days`}</div>
+          )}
         </div>
         <div className="content">
           <div className="ui checkbox">

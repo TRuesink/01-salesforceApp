@@ -1,13 +1,11 @@
 import React from "react";
 import converter from "number-to-words";
 import { connect } from "react-redux";
-import { fetchPaths, changeLoadingStatus } from "../actions";
-import { LOADING, NOT_LOADING } from "../actions/types";
+import { fetchPaths } from "../actions";
 
 class Path extends React.Component {
   componentDidMount() {
     this.props.fetchPaths();
-    this.props.changeLoadingStatus(NOT_LOADING);
   }
   renderStepAssist() {
     const { metadata } = this.props;
@@ -28,7 +26,6 @@ class Path extends React.Component {
 
   onClickStage = (stage) => {
     this.props.onSubmit({ StageName: stage });
-    this.props.changeLoadingStatus(LOADING);
   };
 
   renderSteps() {
@@ -66,8 +63,8 @@ class Path extends React.Component {
         <div className="six wide column">
           <div
             className={
-              this.props.loadingStatus
-                ? "ui loading basic segment"
+              this.props.isFetching
+                ? "ui basic segment loading"
                 : "ui basic segment"
             }
           >
@@ -81,7 +78,12 @@ class Path extends React.Component {
           </div>
         </div>
         <div className="ten wide column">
-          <div style={{ height: "100%" }} className="ui segment">
+          <div
+            style={{ height: "100%" }}
+            className={
+              this.props.isFetching ? "ui segment loading" : "ui segment"
+            }
+          >
             <h3>Directions</h3>
             <div className="ui clearing divider"></div>
             {this.renderStepAssist()}
@@ -99,10 +101,7 @@ class Path extends React.Component {
 const mapStateToProps = (state) => {
   return {
     metadata: state.metadata,
-    loadingStatus: state.loadingStatus,
   };
 };
 
-export default connect(mapStateToProps, { fetchPaths, changeLoadingStatus })(
-  Path
-);
+export default connect(mapStateToProps, { fetchPaths })(Path);

@@ -7,34 +7,36 @@ import {
   fetchAccounts,
   fetchContacts,
   fetchOpportunities,
-  changeLoadingStatus,
 } from "../../actions";
-import { LOADING } from "../../actions/types";
 
 class OppPage extends React.Component {
   componentDidMount() {
     this.props.fetchAccounts("test");
-    this.props.fetchOpportunities({ limit: 10, page: 1 });
+    this.props.fetchOpportunities({ limit: 10, page: 1, sort: "Name" });
   }
 
-  componentDidUpdate(prevProps) {}
-
   onSelectFilter = (formValues) => {
-    this.props.changeLoadingStatus(LOADING);
     if (Object.keys(formValues).length === 0) {
-      return this.props.fetchOpportunities({ limit: 10, page: 1 });
+      return this.props.fetchOpportunities({
+        limit: 10,
+        page: 1,
+        sort: "Name",
+      });
     }
-    this.props.fetchOpportunities(formValues);
+    this.props.fetchOpportunities({ ...formValues, sort: "Name" });
   };
 
   renderContent() {
-    const { accounts, contacts } = this.props;
-    if (accounts === null || contacts === null) {
-      return <div>loading...</div>;
+    const { accounts } = this.props;
+    if (accounts.isFetching === true) {
+      return <div className="ui active centered inline loader"></div>;
     }
     return (
       <div>
-        <FilterBar accounts={accounts} onSelectFilter={this.onSelectFilter} />
+        <FilterBar
+          accounts={accounts.data}
+          onSelectFilter={this.onSelectFilter}
+        />
         <OppList />
       </div>
     );
@@ -56,5 +58,4 @@ export default connect(mapStateToProps, {
   fetchAccounts,
   fetchContacts,
   fetchOpportunities,
-  changeLoadingStatus,
 })(OppPage);

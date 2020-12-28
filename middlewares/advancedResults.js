@@ -22,6 +22,14 @@ const advancedResults = asyncHandler(async (req, res, next) => {
     fields = req.query.select.split(",");
   }
 
+  // Sort by
+  let sort;
+  if (req.query.sort) {
+    sort = req.query.sort;
+  } else {
+    sort = "";
+  }
+
   // sobject
   if (!req.params.type) {
     return next(
@@ -63,7 +71,7 @@ const advancedResults = asyncHandler(async (req, res, next) => {
   const results = await conn
     .sobject(sobject)
     .find(query, fields)
-    //.sort("")
+    .sort(sort)
     .offset(skip)
     .limit(limit);
 

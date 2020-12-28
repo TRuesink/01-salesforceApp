@@ -1,10 +1,19 @@
 import _ from "lodash";
-import { FETCH_ACCOUNTS } from "../actions/types";
+import { FETCH_ACCOUNTS, IN_PROGRESS_ACCOUNT } from "../actions/types";
 
-const accountReducer = (state = {}, action) => {
+const accountReducer = (
+  state = { pagination: {}, data: {}, isFetching: false },
+  action
+) => {
   switch (action.type) {
     case FETCH_ACCOUNTS:
-      return { ...state, ..._.mapKeys(action.payload.data, "Id") };
+      return {
+        pagination: action.payload.pagination,
+        data: _.mapKeys(action.payload.data, "Id"),
+        isFetching: false,
+      };
+    case IN_PROGRESS_ACCOUNT:
+      return { ...state, isFetching: true };
     default:
       return state;
   }

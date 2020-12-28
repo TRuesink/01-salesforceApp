@@ -2,21 +2,16 @@ import React from "react";
 import { Field, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 import _ from "lodash";
-import {
-  changeLoadingStatus,
-  fetchAccounts,
-  fetchMetadata,
-} from "../../actions";
-import { LOADING, NOT_LOADING } from "../../actions/types";
+import { fetchAccounts, fetchMetadata } from "../../actions";
 
 class OppForm extends React.Component {
   componentDidMount() {
     this.props.fetchMetadata("Opportunity");
     this.props.fetchAccounts();
-    this.props.changeLoadingStatus(NOT_LOADING);
   }
   getPicklistFields() {
-    const picklistFields = this.props.fields.filter(
+    const fields = this.props.metadata.Opportunity.fields;
+    const picklistFields = fields.filter(
       (field) =>
         field.name === "StageName" ||
         field.name === "LeadSource" ||
@@ -55,7 +50,7 @@ class OppForm extends React.Component {
     let options;
 
     if (!picklist) {
-      options = Object.values(this.props.accounts)
+      options = Object.values(this.props.accounts.data)
         .filter((item) => typeof item === "object")
         .map((item) => {
           return { key: item.Id, text: item.Name, value: item.Id };
@@ -85,14 +80,15 @@ class OppForm extends React.Component {
 
   onSubmit = (formValues) => {
     this.props.onSubmit(formValues);
-    this.props.changeLoadingStatus(LOADING);
   };
 
   renderForm() {
     const picklistFields = this.getPicklistFields();
     return (
       <form
-        className={this.props.loadingStatus ? "ui form loading" : "ui form"}
+        className={
+          this.props.opportunities.isFetching ? "ui form loading" : "ui form"
+        }
         onSubmit={this.props.handleSubmit(this.onSubmit)}
       >
         <div className="scrolling content">
@@ -148,7 +144,7 @@ class OppForm extends React.Component {
   }
 
   render() {
-    if (Object.keys(this.props.accounts).length === 0) {
+    if (this.props.accounts.isFetching || !this.props.metadata.Opportunity) {
       return <div className="ui segment loading"></div>;
     }
     return <div>{this.renderForm()}</div>;
@@ -161,14 +157,13 @@ OppForm = reduxForm({
 
 const mapStateToProps = (state) => {
   return {
-    fields: state.metadata.Opportunity.fields,
-    loadingStatus: state.loadingStatus,
+    metadata: state.metadata,
     accounts: state.accounts,
+    opportunities: state.opportunities,
   };
 };
 
 export default connect(mapStateToProps, {
-  changeLoadingStatus,
   fetchAccounts,
   fetchMetadata,
 })(OppForm);

@@ -10,9 +10,13 @@ import {
   FETCH_PATHS,
   UPDATE_OPPORTUNITY,
   VIEW,
-  NOT_LOADING,
   FETCH_TASKS,
   UPDATE_TASK,
+  CREATE_TASK,
+  IN_PROGRESS_OPPORTUNITY,
+  IN_PROGRESS_ACCOUNT,
+  IN_PROGRESS_TASK,
+  IN_PROGRESS_USER,
 } from "./types";
 //import salesforceService from "../apis/salesforceService";
 import axios from "axios";
@@ -21,6 +25,7 @@ import history from "../history";
 // auth actions
 export const signIn = (formValues) => {
   return async (dispatch) => {
+    dispatch({ type: IN_PROGRESS_USER });
     try {
       const response = await axios.post("/api/v1/auth/login", formValues);
       dispatch({ type: GET_USER, payload: response.data });
@@ -66,6 +71,7 @@ export const changeEditMode = (status) => {
 // Account Actions
 export const fetchAccounts = (params) => {
   return async (dispatch) => {
+    dispatch({ type: IN_PROGRESS_ACCOUNT });
     const response = await axios.get(
       `/api/v1/sobjects/Account?limit=50&page=1`
     );
@@ -87,17 +93,18 @@ export const fetchContacts = (params) => {
 // get opportunities
 export const fetchOpportunities = (params) => {
   return async (dispatch) => {
+    dispatch({ type: IN_PROGRESS_OPPORTUNITY });
     const response = await axios.get(`/api/v1/sobjects/Opportunity`, {
       params: params,
     });
     dispatch({ type: FETCH_OPPORTUNITIES, payload: response.data });
-    dispatch({ type: NOT_LOADING });
   };
 };
 
 // create an opportunity
 export const createOpportunity = (formValues) => {
   return async (dispatch) => {
+    dispatch({ type: IN_PROGRESS_OPPORTUNITY });
     const response = await axios.post(
       `/api/v1/sobjects/Opportunity`,
       formValues
@@ -110,13 +117,13 @@ export const createOpportunity = (formValues) => {
 // update an opportunity
 export const updateOpportunity = (id, formValues) => {
   return async (dispatch) => {
+    dispatch({ type: IN_PROGRESS_OPPORTUNITY });
     const response = await axios.put(
       `/api/v1/sobjects/Opportunity/${id}`,
       formValues
     );
     dispatch({ type: UPDATE_OPPORTUNITY, payload: response.data });
     dispatch({ type: VIEW });
-    dispatch({ type: NOT_LOADING });
   };
 };
 
@@ -124,20 +131,30 @@ export const updateOpportunity = (id, formValues) => {
 // fetch tasks
 export const fetchTasks = (params) => {
   return async (dispatch) => {
+    dispatch({ type: IN_PROGRESS_TASK });
     const response = await axios.get(`/api/v1/sobjects/Task`, {
       params: params,
     });
     dispatch({ type: FETCH_TASKS, payload: response.data });
-    dispatch({ type: NOT_LOADING });
   };
 };
 // update task
 export const updateTask = (id, formValues) => {
   return async (dispatch) => {
+    dispatch({ type: IN_PROGRESS_TASK });
     const response = await axios.put(`/api/v1/sobjects/Task/${id}`, formValues);
     dispatch({ type: UPDATE_TASK, payload: response.data });
     console.log(response);
-    dispatch({ type: NOT_LOADING });
+  };
+};
+
+//create task
+export const createTask = (formValues) => {
+  return async (dispatch) => {
+    dispatch({ type: IN_PROGRESS_TASK });
+    const response = await axios.post(`/api/v1/sobjects/Task`, formValues);
+    dispatch({ type: CREATE_TASK, payload: response.data });
+    history.push(`/opportunities/${formValues.WhatId}/tasks`);
   };
 };
 

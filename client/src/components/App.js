@@ -18,11 +18,9 @@ import OppCreate from "./Opportunities/OppCreate";
 // import history object
 import history from "../history";
 import OppDetailPage from "./Opportunities/OppDetailPage";
+import TaskCreate from "./Tasks/TaskCreate";
 
 class App extends React.Component {
-  componentDidMount() {
-    this.props.fetchMetadata("Opportunity");
-  }
   renderContent() {
     const { user } = this.props;
     if (user.success === null) {
@@ -63,6 +61,7 @@ class App extends React.Component {
                 />
                 <Route path="/opportunities/:id" component={OppDetailPage} />
                 <Route path="/leads" exact component={LeadList} />
+                <Route path="/tasks/create/:id" exact component={TaskCreate} />
               </Switch>
             </div>
           </div>

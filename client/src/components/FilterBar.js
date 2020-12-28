@@ -23,43 +23,34 @@ class FilterBar extends React.Component {
   };
 
   renderContent() {
-    const { accounts, contacts, leads, opps, funnels } = this.props;
-    const temp = { accounts, contacts, leads, opps, funnels };
-    const categories = Object.values({ ...temp });
-    const testForRender = categories
-      .filter((item) => item !== undefined)
-      .every((item) => Object.keys(item).length !== 0);
-    const titles = ["AccountId", "Contact", "Lead", "Opportunity", "Funnel"];
-    for (let i = 0; i < 5; i++) {
-      if (categories[i] !== undefined) {
-        categories[i].title = titles[i];
-      }
-    }
-    if (testForRender) {
-      return categories.map((cat, index) => {
-        if (cat !== undefined) {
-          const title = cat.title;
+    const { accounts, contacts, leads, opps } = this.props;
 
-          const options = Object.values(cat)
-            .filter((item) => typeof item === "object")
-            .map((item) => {
-              return { key: item.Id, text: item.Name, value: item.Id };
-            });
-          return (
-            <div key={cat.title} className="field">
-              <Field
-                name={title}
-                component={this.renderInput}
-                placeholder={title}
-                options={options}
-              />
-            </div>
-          );
-        }
-        return <div key={"undefinedCat" + index}></div>;
-      });
-    }
-    return <div key={1} className="field loading segment"></div>;
+    const categories = {
+      AccountId: { ...accounts },
+      ContactId: { ...contacts },
+      LeadId: { ...leads },
+      OpportunityId: { ...opps },
+    };
+    const titles = Object.keys(categories);
+    console.log(categories);
+
+    return Object.values(categories).map((cat, index) => {
+      if (Object.keys(cat).length !== 0) {
+        const options = Object.values(cat).map((item) => {
+          return { key: item.Id, text: item.Name, value: item.Id };
+        });
+        return (
+          <div key={titles[index]} className="field">
+            <Field
+              name={titles[index]}
+              component={this.renderInput}
+              placeholder={titles[index]}
+              options={options}
+            />
+          </div>
+        );
+      }
+    });
   }
 
   onSubmit = (formValues) => {

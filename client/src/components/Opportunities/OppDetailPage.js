@@ -4,21 +4,19 @@ import { connect } from "react-redux";
 import {
   fetchMetadata,
   fetchOpportunities,
-  changeLoadingStatus,
   updateOpportunity,
   fetchTasks,
 } from "../../actions";
 import _ from "lodash";
-import { NOT_LOADING } from "../../actions/types";
 import { NavLink } from "react-router-dom";
 import OppDetail from "./OppDetail";
 import TaskList from "../Tasks/TaskList";
 
 class OppDetailPage extends React.Component {
   componentDidMount() {
-    this.props.fetchMetadata("Opportunity");
     this.props.fetchOpportunities({ Id: this.props.match.params.id });
-    this.props.changeLoadingStatus(NOT_LOADING);
+    this.props.fetchMetadata("Opportunity");
+
     this.props.fetchTasks({
       WhatId: this.props.match.params.id,
       select: "IsClosed,Id,Subject,ActivityDate,Description,WhatId",
@@ -26,11 +24,9 @@ class OppDetailPage extends React.Component {
   }
 
   getTaskValues() {
-    // if (this.props.tasks.length === 0) {
-    //   return;
-    // }
     let initialTaskValues = {};
-    this.props.tasks.map((task) => {
+    const tasks = this.props.tasks.data;
+    Object.values(tasks).map((task) => {
       return (initialTaskValues[task.Id] = task.IsClosed);
     });
     return initialTaskValues;
@@ -52,10 +48,11 @@ class OppDetailPage extends React.Component {
 
   render() {
     const { opportunity } = this.props;
+    const oppId = this.props.match.params.id;
 
     return (
       <div>
-        {!opportunity ? (
+        {Object.values(opportunity.data).length === 0 ? (
           <div style={{ height: "400px" }} className="ui basic segment">
             <div className="ui active inverted dimmer">
               <div className="ui text loader">Loading</div>
@@ -64,13 +61,14 @@ class OppDetailPage extends React.Component {
           </div>
         ) : (
           <div>
-            <h1>{opportunity.Name}</h1>
+            <h1>{opportunity.data[oppId].Name}</h1>
             <div className="ui clearing divider"></div>
             <Path
               onSubmit={this.onSubmit}
               stages={this.getStages()}
-              currentStage={opportunity.StageName}
+              currentStage={opportunity.data[oppId].StageName}
               pathType="Opportunity"
+              isFetching={opportunity.isFetching}
             />
             <div className="ui segment">
               <div>
@@ -91,11 +89,14 @@ class OppDetailPage extends React.Component {
                 <div className="ui bottom attached segment">
                   {this.props.location.pathname ===
                   `${this.props.match.url}/details` ? (
-                    <OppDetail opportunity={opportunity} />
+                    <OppDetail
+                      opportunity={opportunity.data[oppId]}
+                      isFetching={opportunity.isFetching}
+                    />
                   ) : (
                     <TaskList
                       initialValues={this.getTaskValues()}
-                      id={opportunity.Id}
+                      id={opportunity.data[oppId].Id}
                     />
                   )}
                 </div>
@@ -110,16 +111,15 @@ class OppDetailPage extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    opportunity: state.opportunities.data[ownProps.match.params.id],
+    opportunity: state.opportunities,
     metadata: state.metadata,
-    tasks: Object.values(state.tasks),
+    tasks: state.tasks,
   };
 };
 
 export default connect(mapStateToProps, {
   fetchMetadata,
   fetchOpportunities,
-  changeLoadingStatus,
   updateOpportunity,
   fetchTasks,
 })(OppDetailPage);

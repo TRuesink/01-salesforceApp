@@ -1,11 +1,13 @@
-import { GET_USER, NO_USER } from "../actions/types";
+import { GET_USER, IN_PROGRESS_USER, NO_USER } from "../actions/types";
 
-const userReducer = (state = { success: null }, action) => {
+const userReducer = (state = { success: null, isFetching: false }, action) => {
   switch (action.type) {
     case GET_USER:
-      return action.payload;
+      return { ...state, ...action.payload, isFetching: false };
     case NO_USER:
-      return action.payload;
+      return { ...state, ...action.payload, isFetching: false };
+    case IN_PROGRESS_USER:
+      return { ...state, isFetching: true };
     default:
       return state;
   }
