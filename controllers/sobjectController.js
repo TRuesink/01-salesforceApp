@@ -110,3 +110,25 @@ exports.getMetaData = asyncHandler(async (req, res, next) => {
     data: metaData,
   });
 });
+
+// @desc search
+// @route GET /api/v1/sobjects/:type/meta
+// @access Private
+exports.getSearchData = asyncHandler(async (req, res, next) => {
+  const conn = new jsforce.Connection({
+    instanceUrl: req.session.auth.instanceUrl,
+    accessToken: req.session.auth.accessToken,
+  });
+
+  const term = req.query.term;
+  const fields = req.query.fields;
+  const searchData = await conn.search(
+    `FIND {${term}*} IN ALL FIELDS RETURNING ${req.params.type}(${fields})`
+  );
+
+  res.status(200).json({
+    success: true,
+    count: searchData.searchRecords.length,
+    data: searchData,
+  });
+});

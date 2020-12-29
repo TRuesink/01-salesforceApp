@@ -46,9 +46,6 @@ const advancedResults = asyncHandler(async (req, res, next) => {
   const skip = (page - 1) * limit; // 10
   const startIndex = (page - 1) * limit; // 10
   const endIndex = page * limit; // 20
-  console.log("page: ", page);
-  console.log("limit: ", limit);
-  console.log("skip: ", skip);
   // get toal number of objects in database
   const total = await conn.sobject(sobject).count(query);
 

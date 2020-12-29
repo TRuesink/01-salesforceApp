@@ -2,7 +2,7 @@ import React from "react";
 import { reduxForm, Field } from "redux-form";
 import { connect } from "react-redux";
 
-import { signIn } from "../actions";
+import { signIn, getUser } from "../actions";
 
 import "../static/css/landingPage.css";
 import salesforceLogo from "../static/images/salesforceLogo.png";
@@ -104,4 +104,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { signIn })(LandingPage);
+export default connect(mapStateToProps, { signIn, getUser })(LandingPage);

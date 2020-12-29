@@ -7,16 +7,20 @@ const {
   likeFeedElement,
   deleteItem,
   createGroup,
+  getGroupList,
 } = require("../controllers/chatterController");
 
 const { authorized } = require("../middlewares/auth");
 
 const router = express.Router();
 
-router.route("/:id").get(authorized, getChatter);
+router.route("/groups/:id").get(authorized, getChatter);
 
 // create group
-router.route("/groups").post(authorized, createGroup);
+router
+  .route("/groups")
+  .post(authorized, createGroup)
+  .get(authorized, getGroupList);
 // create comment
 router.route("/comments/:parentElementId").post(authorized, createComment);
 // create like

@@ -8,6 +8,9 @@ import opportunityReducer from "./opportunityReducer";
 import metadataReducer from "./metadataReducer";
 import editModeReducer from "./editModeReducer";
 import taskReducer from "./taskReducer";
+import chatterReducer from "./chatterReducer";
+import leadReducer from "./leadReducer";
+import errorReducer from "./errorReducer";
 
 const appReducer = combineReducers({
   form: formReducer,
@@ -18,6 +21,9 @@ const appReducer = combineReducers({
   opportunities: opportunityReducer,
   editing: editModeReducer,
   tasks: taskReducer,
+  chatter: chatterReducer,
+  leads: leadReducer,
+  error: errorReducer,
 });
 
 const rootReducer = (state, action) => {

@@ -12,7 +12,6 @@ const taskReducer = (
 ) => {
   switch (action.type) {
     case FETCH_TASKS:
-      console.log(action.payload);
       return {
         pagination: action.payload.pagination,
         data: _.mapKeys(action.payload.data, "Id"),
@@ -27,7 +26,7 @@ const taskReducer = (
     case CREATE_TASK:
       return {
         ...state,
-        data: { ...state.data, [action.payload.data.Id]: action.payload.data },
+        data: { ...state.data },
         isFetching: false,
       };
     case IN_PROGRESS_TASK:

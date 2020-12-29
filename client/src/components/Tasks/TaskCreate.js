@@ -11,7 +11,9 @@ class TaskCreate extends React.Component {
       <>
         <button
           onClick={() =>
-            history.push(`/opportunities/${this.props.match.params.id}/tasks`)
+            history.push(
+              `/${this.props.match.params.type}/${this.props.match.params.id}/tasks`
+            )
           }
           className="ui button"
         >
@@ -25,15 +27,20 @@ class TaskCreate extends React.Component {
   }
 
   onSubmit = (formValues) => {
-    console.log({ ...formValues, WhatId: this.props.match.params.id });
-    this.props.createTask({
-      ...formValues,
-      WhatId: this.props.match.params.id,
-    });
+    if (this.props.match.params.type === "leads") {
+      this.props.createTask("leads", {
+        ...formValues,
+        WhoId: this.props.match.params.id,
+      });
+    } else {
+      this.props.createTask("opportunities", {
+        ...formValues,
+        WhatId: this.props.match.params.id,
+      });
+    }
   };
 
   render() {
-    console.log(this.props);
     return (
       <div>
         <Modal
@@ -41,7 +48,9 @@ class TaskCreate extends React.Component {
           content={this.renderContent()}
           actions={this.renderActions()}
           onDismiss={() =>
-            history.push(`/opportunities/${this.props.match.params.id}/tasks`)
+            history.push(
+              `/${this.props.match.params.type}/${this.props.match.params.id}/tasks`
+            )
           }
         />
       </div>

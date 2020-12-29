@@ -39,9 +39,6 @@ class SideBar extends React.Component {
           <NavLink to="/contacts" className="item">
             Contacts
           </NavLink>
-          <NavLink to="/chatter" className="item">
-            Chatter
-          </NavLink>
           <div className="item">
             <div className="ui transparent icon input">
               <input type="text" placeholder="Search"></input>

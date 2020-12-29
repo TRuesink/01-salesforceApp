@@ -10,9 +10,9 @@ class TaskItem extends React.Component {
   }
 
   render() {
-    const { title, description, date, input, value } = this.props;
+    const { title, date, input, taskKey } = this.props;
     return (
-      <div className="item">
+      <div key={taskKey} className="item">
         <div className="right floated content">
           {input.value === true ? (
             <div style={{ color: "green" }}>Task completed</div>

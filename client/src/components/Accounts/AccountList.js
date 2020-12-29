@@ -1,39 +1,38 @@
 import React from "react";
-import LeadItem from "./LeadItem";
+import AccountItem from "./AccountItem";
 
 import { connect } from "react-redux";
-import { fetchLeads } from "../../actions";
+import { fetchAccounts } from "../../actions";
 import Pagination from "../Pagination";
 
-class LeadList extends React.Component {
+class AccountList extends React.Component {
   renderContent() {
-    return Object.values(this.props.leads.data).map((lead) => {
-      return <LeadItem key={lead.Id} lead={lead} />;
+    return Object.values(this.props.accounts.data).map((account) => {
+      return <AccountItem key={account.Id} account={account} />;
     });
   }
 
   onPageTurn = (pageObj) => {
-    this.props.fetchLeads({ ...pageObj, sort: "Name" });
+    this.props.fetchAccounts({ ...pageObj, sort: "Name" });
   };
 
   render() {
     return (
       <div
         className={
-          this.props.leads.isFetching ? "ui loading segment" : "ui segment"
+          this.props.accounts.isFetching ? "ui loading segment" : "ui segment"
         }
       >
-        <h1 className="ui header">Leads</h1>
+        <h1 className="ui header">Accounts</h1>
         <table className="ui celled table">
           <thead>
             <tr>
               <th>Name</th>
-              <th>Lead Status</th>
-              <th>Company</th>
-              <th>Title</th>
+              <th>Industry</th>
+              <th>Annual Revenue</th>
             </tr>
           </thead>
-          {this.props.leads.isFetching ? (
+          {this.props.accounts.isFetching ? (
             <tbody></tbody>
           ) : (
             <tbody>{this.renderContent()}</tbody>
@@ -41,7 +40,7 @@ class LeadList extends React.Component {
         </table>
         <Pagination
           onPageTurn={this.onPageTurn}
-          pagination={this.props.leads.pagination}
+          pagination={this.props.accounts.pagination}
         />
       </div>
     );
@@ -50,10 +49,10 @@ class LeadList extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    leads: state.leads,
+    accounts: state.accounts,
   };
 };
 
 export default connect(mapStateToProps, {
-  fetchLeads,
-})(LeadList);
+  fetchAccounts,
+})(AccountList);

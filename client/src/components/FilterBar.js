@@ -2,59 +2,25 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { reduxForm, Field } from "redux-form";
-import { Dropdown } from "semantic-ui-react";
 import history from "../history";
 
 import "../static/css/filterBar.css";
 
 class FilterBar extends React.Component {
-  renderInput = (props) => {
+  renderInput({ label, input, meta }) {
     return (
-      <Dropdown
-        key={1}
-        onChange={(e, { value }) => props.input.onChange(value)}
-        clearable
-        placeholder={props.placeholder}
-        selection
-        options={props.options}
-        value={props.value}
-      />
+      <div className="ui transparent icon input">
+        <input {...input} placeholder={label}></input>
+      </div>
     );
-  };
+  }
 
-  renderContent() {
-    const { accounts, contacts, leads, opps } = this.props;
-
-    const categories = {
-      AccountId: { ...accounts },
-      ContactId: { ...contacts },
-      LeadId: { ...leads },
-      OpportunityId: { ...opps },
-    };
-    const titles = Object.keys(categories);
-    console.log(categories);
-
-    return Object.values(categories).map((cat, index) => {
-      if (Object.keys(cat).length !== 0) {
-        const options = Object.values(cat).map((item) => {
-          return { key: item.Id, text: item.Name, value: item.Id };
-        });
-        return (
-          <div key={titles[index]} className="field">
-            <Field
-              name={titles[index]}
-              component={this.renderInput}
-              placeholder={titles[index]}
-              options={options}
-            />
-          </div>
-        );
-      }
-    });
+  renderSearchForm() {
+    return <Field name="search" component={this.renderInput} label="Search" />;
   }
 
   onSubmit = (formValues) => {
-    this.props.onSelectFilter(formValues);
+    this.props.onSelectFilter(formValues.search);
   };
 
   render() {
@@ -65,18 +31,7 @@ class FilterBar extends React.Component {
             className="ui form"
             onSubmit={this.props.handleSubmit(this.onSubmit)}
           >
-            <div className="filter-bar-form inline fields">
-              <label>Filter</label>
-              {this.renderContent()}
-              <div className="field">
-                <button
-                  style={{ backgroundColor: "#04A3E3", color: "white" }}
-                  className="ui button primary"
-                >
-                  Filter
-                </button>
-              </div>
-            </div>
+            {this.renderSearchForm()}
           </form>
         </div>
         <div className="right item">

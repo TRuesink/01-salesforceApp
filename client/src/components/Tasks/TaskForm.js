@@ -1,5 +1,6 @@
 import React from "react";
 import { reduxForm, Field } from "redux-form";
+import { connect } from "react-redux";
 
 class TaskForm extends React.Component {
   renderDateInput({ label, input, meta }) {
@@ -32,7 +33,7 @@ class TaskForm extends React.Component {
   render() {
     return (
       <form
-        className="ui form"
+        className={this.props.tasks.isFetching ? "ui form loading" : "ui form"}
         onSubmit={this.props.handleSubmit(this.onSubmit)}
       >
         <Field name="Subject" component={this.renderInput} label="Subject" />
@@ -52,6 +53,14 @@ class TaskForm extends React.Component {
   }
 }
 
-export default reduxForm({
+TaskForm = reduxForm({
   form: "taskForm",
 })(TaskForm);
+
+const mapStateToProps = (state) => {
+  return {
+    tasks: state.tasks,
+  };
+};
+
+export default connect(mapStateToProps)(TaskForm);

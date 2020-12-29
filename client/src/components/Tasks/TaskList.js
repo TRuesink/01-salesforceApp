@@ -9,7 +9,7 @@ class TaskList extends React.Component {
   renderCheckBox({ input, task }) {
     return (
       <TaskItem
-        key={task.Id}
+        taskKey={task.Id}
         title={task.Subject}
         description={task.Subscription}
         date={task.ActivityDate}
@@ -28,6 +28,7 @@ class TaskList extends React.Component {
     return Object.values(tasks).map((task) => {
       return (
         <Field
+          key={task.Id}
           onChange={() => this.onTaskCheck(task.Id, task.IsClosed)}
           task={task}
           name={task.Id}
@@ -55,7 +56,7 @@ class TaskList extends React.Component {
         </form>
         <div style={{ height: "40px" }}>
           <Link
-            to={`/tasks/create/${this.props.id}`}
+            to={`/tasks/create/${this.props.type}/${this.props.id}`}
             style={{ backgroundColor: "#04A3E3", color: "white" }}
             className="ui right floated circular icon button"
           >

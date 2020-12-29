@@ -75,7 +75,6 @@ exports.likeFeedElement = asyncHandler(async (req, res, next) => {
     instanceUrl: req.session.auth.instanceUrl,
     accessToken: req.session.auth.accessToken,
   });
-  console.log(req.params);
 
   const chatter = await conn.chatter
     .resource(
@@ -97,7 +96,6 @@ exports.deleteItem = asyncHandler(async (req, res, next) => {
     instanceUrl: req.session.auth.instanceUrl,
     accessToken: req.session.auth.accessToken,
   });
-  console.log("delete post");
 
   const chatter = await conn.chatter
     .resource(`/${req.params.type}/${req.params.elementId}`)
@@ -123,5 +121,23 @@ exports.createGroup = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: chatter,
+  });
+});
+
+// @desc Get a list of groups
+// @route GET /api/v1/chatter/groups
+// @access Private
+exports.getGroupList = asyncHandler(async (req, res, next) => {
+  const conn = new jsforce.Connection({
+    instanceUrl: req.session.auth.instanceUrl,
+    accessToken: req.session.auth.accessToken,
+  });
+
+  const data = await conn.chatter.resource(`/groups`).retrieve();
+
+  res.status(200).json({
+    success: true,
+    count: data.groups.length,
+    data: data,
   });
 });

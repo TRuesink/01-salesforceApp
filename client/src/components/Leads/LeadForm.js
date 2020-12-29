@@ -2,23 +2,23 @@ import React from "react";
 import { Field, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 import _ from "lodash";
-import { fetchAccounts, fetchMetadata } from "../../actions";
+import { fetchMetadata } from "../../actions";
 
-class OppForm extends React.Component {
+class LeadForm extends React.Component {
   componentDidMount() {
-    this.props.fetchMetadata("Opportunity");
-    this.props.fetchAccounts({ limit: 100, sort: "Name" });
+    this.props.fetchMetadata("Lead");
   }
   getPicklistFields() {
-    const fields = this.props.metadata.Opportunity.fields;
+    const fields = this.props.metadata.Lead.fields;
     const picklistFields = fields.filter(
       (field) =>
-        field.name === "StageName" ||
+        field.name === "Status" ||
         field.name === "LeadSource" ||
-        field.name === "Type"
+        field.name === "Rating"
     );
     return _.mapKeys(picklistFields, "name");
   }
+
   renderInput({ label, input, meta }) {
     return (
       <div className="field">
@@ -37,29 +37,12 @@ class OppForm extends React.Component {
     );
   }
 
-  renderDateInput({ label, input, meta }) {
-    return (
-      <div className="field">
-        <label>{label}</label>
-        <input {...input} type="date"></input>
-      </div>
-    );
-  }
-
   renderDropdown = ({ value, picklist, input, label }) => {
     let options;
+    options = picklist.picklistValues.map((item) => {
+      return { key: item.value, text: item.value, value: item.value };
+    });
 
-    if (!picklist) {
-      options = Object.values(this.props.accounts.data)
-        .filter((item) => typeof item === "object")
-        .map((item) => {
-          return { key: item.Id, text: item.Name, value: item.Id };
-        });
-    } else {
-      options = picklist.picklistValues.map((item) => {
-        return { key: item.value, text: item.value, value: item.value };
-      });
-    }
     return (
       <div className="field">
         <label>{label}</label>
@@ -72,7 +55,6 @@ class OppForm extends React.Component {
               </option>
             );
           })}
-          <option>test 2</option>
         </select>
       </div>
     );
@@ -86,49 +68,44 @@ class OppForm extends React.Component {
     const picklistFields = this.getPicklistFields();
     return (
       <form
-        className={
-          this.props.opportunities.isFetching ? "ui form loading" : "ui form"
-        }
+        className={this.props.leads.isFetching ? "ui form loading" : "ui form"}
         onSubmit={this.props.handleSubmit(this.onSubmit)}
       >
         <div className="scrolling content">
           <Field
-            name="AccountId"
-            component={this.renderDropdown}
-            label="Account Name"
+            name="FirstName"
+            component={this.renderInput}
+            label="First Name"
           />
           <Field
-            name="Name"
+            name="LastName"
             component={this.renderInput}
-            label="Opportunity Name"
+            label="Last Name"
           />
           <Field
             name="Description"
             component={this.renderTextInput}
             label="Description"
           />
+          <Field name="Email" component={this.renderInput} label="Email" />
           <Field
-            name="StageName"
-            component={this.renderDropdown}
-            picklist={picklistFields.StageName}
-            label="Stage Name"
-          />
-          <Field name="Amount" component={this.renderInput} label="Amount" />
-          <Field
-            name="Probability"
+            name="Phone"
             component={this.renderInput}
-            label="Probability"
+            label="Phone Number"
           />
+          <Field name="Company" component={this.renderInput} label="Company" />
+          <Field name="Title" component={this.renderInput} label="Title" />
           <Field
-            name="CloseDate"
-            component={this.renderDateInput}
-            label="Close Date"
-          />
-          <Field
-            name="Type"
+            name="Status"
             component={this.renderDropdown}
-            picklist={picklistFields.Type}
-            label="Type"
+            picklist={picklistFields.Status}
+            label="Lead Status"
+          />
+          <Field
+            name="Rating"
+            component={this.renderDropdown}
+            picklist={picklistFields.Rating}
+            label="Rating"
           />
           <Field
             name="LeadSource"
@@ -136,7 +113,6 @@ class OppForm extends React.Component {
             picklist={picklistFields.LeadSource}
             label="Lead Source"
           />
-
           <button className="fluid ui button primary">Submit</button>
         </div>
       </form>
@@ -144,26 +120,24 @@ class OppForm extends React.Component {
   }
 
   render() {
-    if (this.props.accounts.isFetching || !this.props.metadata.Opportunity) {
+    if (!this.props.metadata.Lead) {
       return <div className="ui segment loading"></div>;
     }
     return <div>{this.renderForm()}</div>;
   }
 }
 
-OppForm = reduxForm({
-  form: "oppForm",
-})(OppForm);
+LeadForm = reduxForm({
+  form: "leadForm",
+})(LeadForm);
 
 const mapStateToProps = (state) => {
   return {
     metadata: state.metadata,
-    accounts: state.accounts,
-    opportunities: state.opportunities,
+    leads: state.leads,
   };
 };
 
 export default connect(mapStateToProps, {
-  fetchAccounts,
   fetchMetadata,
-})(OppForm);
+})(LeadForm);

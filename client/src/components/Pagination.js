@@ -8,6 +8,7 @@ class Pagination extends React.Component {
     }
     return (
       <a
+        href="#"
         onClick={() => this.props.onPageTurn(pagination.prev)}
         className="item"
       >
@@ -21,7 +22,11 @@ class Pagination extends React.Component {
       return;
     }
     return (
-      <a onClick={() => this.onPageClick(pagination.next)} className="item">
+      <a
+        href="#"
+        onClick={() => this.onPageClick(pagination.next)}
+        className="item"
+      >
         {pagination.next.page}
       </a>
     );

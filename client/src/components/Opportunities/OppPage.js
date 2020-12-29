@@ -3,27 +3,22 @@ import FilterBar from "../FilterBar";
 import OppList from "./OppList";
 
 import { connect } from "react-redux";
-import {
-  fetchAccounts,
-  fetchContacts,
-  fetchOpportunities,
-} from "../../actions";
+import { fetchOpportunities, searchOpportunities } from "../../actions";
 
 class OppPage extends React.Component {
   componentDidMount() {
-    this.props.fetchAccounts("test");
     this.props.fetchOpportunities({ limit: 10, page: 1, sort: "Name" });
   }
 
-  onSelectFilter = (formValues) => {
-    if (Object.keys(formValues).length === 0) {
-      return this.props.fetchOpportunities({
-        limit: 10,
-        page: 1,
-        sort: "Name",
-      });
+  onSelectFilter = (term) => {
+    if (term === undefined) {
+      this.props.fetchOpportunities({ limit: 10, page: 1, sort: "Name" });
+    } else if (term.length >= 2) {
+      const fields = "Name,CloseDate,StageName,Id";
+      this.props.searchOpportunities("Opportunity", term, fields);
+    } else {
+      this.props.fetchOpportunities({ limit: 10, page: 1, sort: "Name" });
     }
-    this.props.fetchOpportunities({ ...formValues, sort: "Name" });
   };
 
   renderContent() {
@@ -33,10 +28,7 @@ class OppPage extends React.Component {
     }
     return (
       <div>
-        <FilterBar
-          accounts={accounts.data}
-          onSelectFilter={this.onSelectFilter}
-        />
+        <FilterBar onSelectFilter={this.onSelectFilter} />
         <OppList />
       </div>
     );
@@ -55,7 +47,6 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  fetchAccounts,
-  fetchContacts,
   fetchOpportunities,
+  searchOpportunities,
 })(OppPage);

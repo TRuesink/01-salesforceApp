@@ -1,5 +1,4 @@
 import React from "react";
-import converter from "number-to-words";
 import { connect } from "react-redux";
 import { fetchPaths } from "../actions";
 
@@ -25,7 +24,12 @@ class Path extends React.Component {
   }
 
   onClickStage = (stage) => {
+    if (this.props.pathType === "Lead") {
+      this.props.onSubmit({ Status: stage });
+      return;
+    }
     this.props.onSubmit({ StageName: stage });
+    return;
   };
 
   renderSteps() {
@@ -50,14 +54,12 @@ class Path extends React.Component {
         >
           <div className="content">
             <div className="title">{stage.value}</div>
-            <div className="description"></div>
           </div>
         </a>
       );
     });
   }
   renderContent() {
-    const { stages } = this.props;
     return (
       <div className="ui two column grid">
         <div className="six wide column">
@@ -68,11 +70,7 @@ class Path extends React.Component {
                 : "ui basic segment"
             }
           >
-            <div
-              className={`ui ${converter.toWords(
-                stages.length
-              )} fluid mini vertical ordered steps`}
-            >
+            <div className={`ui fluid mini vertical ordered steps`}>
               {this.renderSteps()}
             </div>
           </div>

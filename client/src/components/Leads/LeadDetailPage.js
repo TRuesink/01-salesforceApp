@@ -3,23 +3,23 @@ import Path from "../Path";
 import { connect } from "react-redux";
 import {
   fetchMetadata,
-  fetchOpportunities,
-  updateOpportunity,
+  fetchLeads,
+  updateLead,
   fetchTasks,
 } from "../../actions";
 import _ from "lodash";
 import { NavLink } from "react-router-dom";
-import OppDetail from "./OppDetail";
+import LeadDetail from "./LeadDetail";
 import TaskList from "../Tasks/TaskList";
 
-class OppDetailPage extends React.Component {
+class LeadDetailPage extends React.Component {
   componentDidMount() {
-    this.props.fetchOpportunities({ Id: this.props.match.params.id });
-    this.props.fetchMetadata("Opportunity");
+    this.props.fetchLeads({ Id: this.props.match.params.id });
+    this.props.fetchMetadata("Lead");
 
     this.props.fetchTasks({
-      WhatId: this.props.match.params.id,
-      select: "IsClosed,Id,Subject,ActivityDate,Description,WhatId",
+      WhoId: this.props.match.params.id,
+      select: "IsClosed,Id,Subject,ActivityDate,Description,WhatId,WhoId",
     });
   }
 
@@ -34,25 +34,25 @@ class OppDetailPage extends React.Component {
 
   getStages() {
     const { metadata } = this.props;
-    if (!metadata.Opportunity) {
+    if (!metadata.Lead) {
       return [];
     }
-    const fields = metadata.Opportunity.fields;
-    const picklistFields = fields.filter((field) => field.name === "StageName");
-    return _.mapKeys(picklistFields, "name").StageName.picklistValues;
+    const fields = metadata.Lead.fields;
+    const picklistFields = fields.filter((field) => field.name === "Status");
+    return _.mapKeys(picklistFields, "name").Status.picklistValues;
   }
 
   onSubmit = (formValues) => {
-    this.props.updateOpportunity(this.props.match.params.id, formValues);
+    this.props.updateLead(this.props.match.params.id, formValues);
   };
 
   render() {
-    const { opportunity } = this.props;
-    const oppId = this.props.match.params.id;
+    const { lead } = this.props;
+    const leadId = this.props.match.params.id;
 
     return (
       <div>
-        {Object.values(opportunity.data).length === 0 ? (
+        {Object.values(lead.data).length === 0 ? (
           <div style={{ height: "400px" }} className="ui basic segment">
             <div className="ui active inverted dimmer">
               <div className="ui text loader">Loading</div>
@@ -61,14 +61,14 @@ class OppDetailPage extends React.Component {
           </div>
         ) : (
           <div>
-            <h1>{opportunity.data[oppId].Name}</h1>
+            <h1>{lead.data[leadId].Name}</h1>
             <div className="ui clearing divider"></div>
             <Path
               onSubmit={this.onSubmit}
               stages={this.getStages()}
-              currentStage={opportunity.data[oppId].StageName}
-              pathType="Opportunity"
-              isFetching={opportunity.isFetching}
+              currentStage={lead.data[leadId].Status}
+              pathType="Lead"
+              isFetching={lead.isFetching}
             />
             <div className="ui segment">
               <div>
@@ -89,15 +89,15 @@ class OppDetailPage extends React.Component {
                 <div className="ui bottom attached segment">
                   {this.props.location.pathname ===
                   `${this.props.match.url}/details` ? (
-                    <OppDetail
-                      opportunity={opportunity.data[oppId]}
-                      isFetching={opportunity.isFetching}
+                    <LeadDetail
+                      lead={lead.data[leadId]}
+                      isFetching={lead.isFetching}
                     />
                   ) : (
                     <TaskList
-                      type="opportunities"
                       initialValues={this.getTaskValues()}
-                      id={opportunity.data[oppId].Id}
+                      type="leads"
+                      id={lead.data[leadId].Id}
                     />
                   )}
                 </div>
@@ -112,7 +112,7 @@ class OppDetailPage extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    opportunity: state.opportunities,
+    lead: state.leads,
     metadata: state.metadata,
     tasks: state.tasks,
   };
@@ -120,7 +120,7 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(mapStateToProps, {
   fetchMetadata,
-  fetchOpportunities,
-  updateOpportunity,
+  fetchLeads,
+  updateLead,
   fetchTasks,
-})(OppDetailPage);
+})(LeadDetailPage);

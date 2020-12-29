@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 
 // Import components
 import LandingPage from "./LandingPage";
-import LeadList from "./Leads/LeadList";
 import DashboardPage from "./dashboard/DashboardPage";
 import Header from "./Header";
 
@@ -13,18 +12,32 @@ import OppPage from "./Opportunities/OppPage";
 
 //Import actions
 import { getUser, fetchMetadata } from "../actions";
-import OppDetail from "./Opportunities/OppDetail";
 import OppCreate from "./Opportunities/OppCreate";
 // import history object
 import history from "../history";
 import OppDetailPage from "./Opportunities/OppDetailPage";
 import TaskCreate from "./Tasks/TaskCreate";
+import LeadPage from "./Leads/LeadPage";
+import LeadCreate from "./Leads/LeadCreate";
+import LeadDetailPage from "./Leads/LeadDetailPage";
+import AccountPage from "./Accounts/AccountPage";
+import AccountCreate from "./Accounts/AccountCreate";
+import AccountDetailPage from "./Accounts/AccountDetailPage";
 
 class App extends React.Component {
+  componentDidMount() {
+    this.props.getUser();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.user.success === true && this.props.user.success === null) {
+      this.props.getUser();
+    }
+  }
+
   renderContent() {
     const { user } = this.props;
     if (user.success === null) {
-      this.props.getUser();
       return (
         <div style={{ height: "500px" }} className=" segment">
           <div className="ui active inverted dimmer">
@@ -60,8 +73,21 @@ class App extends React.Component {
                   component={OppCreate}
                 />
                 <Route path="/opportunities/:id" component={OppDetailPage} />
-                <Route path="/leads" exact component={LeadList} />
-                <Route path="/tasks/create/:id" exact component={TaskCreate} />
+                <Route path="/leads" exact component={LeadPage} />
+                <Route path="/leads/create" exact component={LeadCreate} />
+                <Route path="/leads/:id" component={LeadDetailPage} />
+                <Route
+                  path="/tasks/create/:type/:id"
+                  exact
+                  component={TaskCreate}
+                />
+                <Route path="/accounts" exact component={AccountPage} />
+                <Route
+                  path="/accounts/create"
+                  exact
+                  component={AccountCreate}
+                />
+                <Route path="/accounts/:id" component={AccountDetailPage} />
               </Switch>
             </div>
           </div>

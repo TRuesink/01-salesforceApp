@@ -8,6 +8,7 @@ const {
   deleteSobject,
   createSobject,
   getMetaData,
+  getSearchData,
 } = require("../controllers/sobjectController");
 
 // bring in authentication middlewares
@@ -15,6 +16,7 @@ const { authorized } = require("../middlewares/auth");
 const advancedResults = require("../middlewares/advancedResults");
 
 const router = express.Router();
+router.route("/search/:type").get(authorized, getSearchData);
 router.route("/metadata/:type").get(authorized, getMetaData);
 router
   .route("/:type")
