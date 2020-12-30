@@ -20,7 +20,7 @@ router.route("/search/:type").get(authorized, getSearchData);
 router.route("/metadata/:type").get(authorized, getMetaData);
 router
   .route("/:type")
-  .get(advancedResults, authorized, getSobjects)
+  .get(authorized, advancedResults, getSobjects)
   .post(authorized, createSobject);
 router
   .route("/:type/:id")

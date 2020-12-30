@@ -23,6 +23,10 @@ import LeadDetailPage from "./Leads/LeadDetailPage";
 import AccountPage from "./Accounts/AccountPage";
 import AccountCreate from "./Accounts/AccountCreate";
 import AccountDetailPage from "./Accounts/AccountDetailPage";
+import MoreInfo from "./MoreInfo";
+import ContactPage from "./Contacts/ContactPage";
+import ContactCreate from "./Contacts/ContactCreate";
+import ContactDetailPage from "./Contacts/ContactDetailPage";
 
 class App extends React.Component {
   componentDidMount() {
@@ -46,10 +50,14 @@ class App extends React.Component {
           <p></p>
         </div>
       );
-    } else if (user.success === false) {
+    } else if (
+      user.success === false ||
+      this.props.error.message === "Not Authorized"
+    ) {
       return (
         <div>
-          <LandingPage />
+          <Route path="/security-token-info" exact component={MoreInfo} />
+          <Route path="/" component={LandingPage} />
         </div>
       );
     } else if (user.success === true) {
@@ -88,6 +96,13 @@ class App extends React.Component {
                   component={AccountCreate}
                 />
                 <Route path="/accounts/:id" component={AccountDetailPage} />
+                <Route path="/contacts" exact component={ContactPage} />
+                <Route
+                  path="/contacts/create"
+                  exact
+                  component={ContactCreate}
+                />
+                <Route path="/contacts/:id" component={ContactDetailPage} />
               </Switch>
             </div>
           </div>
@@ -107,6 +122,7 @@ class App extends React.Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    error: state.error,
   };
 };
 

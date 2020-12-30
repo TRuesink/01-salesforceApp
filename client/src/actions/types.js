@@ -11,8 +11,12 @@ export const FETCH_ACCOUNTS = "FETCH_ACCOUNTS";
 export const IN_PROGRESS_ACCOUNT = "IN_PROGRESS_ACCOUNT";
 export const CREATE_ACCOUNT = "CREATE_ACCOUNT";
 export const UPDATE_ACCOUNT = "UPDATE_ACCOUNT";
+
 //Contact action types
 export const FETCH_CONTACTS = "FETCH_CONTACTS";
+export const IN_PROGRESS_CONTACT = "IN_PROGRESS_CONTACT";
+export const CREATE_CONTACT = "CREATE_CONTACT";
+export const UPDATE_CONTACT = "UPDATE_CONTACT";
 
 //Contact opportunity types
 export const FETCH_OPPORTUNITIES = "FETCH_OPPORTUNITIES";

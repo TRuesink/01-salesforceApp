@@ -6,6 +6,7 @@ import { signIn, getUser } from "../actions";
 
 import "../static/css/landingPage.css";
 import salesforceLogo from "../static/images/salesforceLogo.png";
+import { Link } from "react-router-dom";
 
 class LandingPage extends React.Component {
   onSubmit = (formValues) => {
@@ -50,7 +51,10 @@ class LandingPage extends React.Component {
                     />
                   </div>
                   <div className="field">
-                    <label>Security Token</label>
+                    <label>
+                      Security Token
+                      <Link to="/security-token-info"> (Info)</Link>
+                    </label>
                     <Field
                       name="securityToken"
                       component={this.renderInput}

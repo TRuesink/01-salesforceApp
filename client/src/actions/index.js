@@ -30,6 +30,10 @@ import {
   OPPORTUNITY_SEARCH,
   LEAD_SEARCH,
   ACCOUNT_SEARCH,
+  IN_PROGRESS_CONTACT,
+  CREATE_CONTACT,
+  UPDATE_CONTACT,
+  CONTACT_SEARCH,
 } from "./types";
 import axios from "axios";
 import history from "../history";
@@ -116,12 +120,43 @@ export const updateAccount = (id, formValues) => {
 };
 
 // CONTACT ACTIONS
+// fetch contacts
 export const fetchContacts = (params) => {
   return async (dispatch) => {
-    const response = await axios.get(
-      `/api/v1/sobjects/Contact?limit=10&page=1`
+    try {
+      dispatch({ type: IN_PROGRESS_CONTACT });
+      const response = await axios.get(`/api/v1/sobjects/Contact`, {
+        params: params,
+      });
+      dispatch({ type: FETCH_CONTACTS, payload: response.data });
+      dispatch({ type: NO_ERROR });
+    } catch (error) {
+      console.log(error.response);
+      dispatch({ type: ERROR, payload: error.response });
+    }
+  };
+};
+
+// create contact
+export const createContact = (formValues) => {
+  return async (dispatch) => {
+    dispatch({ type: IN_PROGRESS_CONTACT });
+    const response = await axios.post(`/api/v1/sobjects/Contact`, formValues);
+    dispatch({ type: CREATE_CONTACT, payload: response.data });
+    history.push("/contacts");
+  };
+};
+
+// update a contact
+export const updateContact = (id, formValues) => {
+  return async (dispatch) => {
+    dispatch({ type: IN_PROGRESS_CONTACT });
+    const response = await axios.put(
+      `/api/v1/sobjects/Contact/${id}`,
+      formValues
     );
-    dispatch({ type: FETCH_CONTACTS, payload: response.data });
+    dispatch({ type: UPDATE_CONTACT, payload: response.data });
+    dispatch({ type: VIEW });
   };
 };
 
@@ -284,5 +319,15 @@ export const searchAccounts = (type, term, fields) => {
       params: { term: term, fields: fields },
     });
     dispatch({ type: ACCOUNT_SEARCH, payload: response.data });
+  };
+};
+
+export const searchContacts = (type, term, fields) => {
+  return async (dispatch) => {
+    dispatch({ type: IN_PROGRESS_CONTACT });
+    const response = await axios.get(`/api/v1/sobjects/search/${type}`, {
+      params: { term: term, fields: fields },
+    });
+    dispatch({ type: CONTACT_SEARCH, payload: response.data });
   };
 };
