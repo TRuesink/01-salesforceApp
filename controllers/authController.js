@@ -35,6 +35,7 @@ exports.login = asyncHandler(async (req, res, next) => {
 // @access
 exports.logout = (req, res, next) => {
   req.session = null;
+  res.clearCookie();
   res.status(200).json({ success: true, data: [] });
 };
 
